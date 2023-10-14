@@ -1,0 +1,10 @@
+{
+  "emmet.includeLanguages": {
+    "rust": "html"
+  },
+  "rust-analyzer.linkedProjects": [
+    "src-tauri/Cargo.toml",
+    "src-web/Cargo.toml",
+    "src-shared/Cargo.toml",
+  ]
+}

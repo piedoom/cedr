@@ -1,0 +1,222 @@
+/* ------------------------------ */
+
+@import "reset.scss";
+@import "font.scss";
+@import "./public/line-awesome/css/line-awesome.min.css";
+
+$base-grayscale-0: #ffffff;
+$base-grayscale-50: #f5f5f5;
+$base-grayscale-500: #6e6e6e;
+$base-grayscale-800: #000;
+
+$base-transparent-50: rgba(0, 0, 0, 0.06);
+$base-transparent-100: rgba(0, 0, 0, 0.2);
+
+$base-red-500: #cc2400;
+$base-green-500: #4e9d01;
+$base-blue-500: #0092e6;
+$base-purple-500: #b700c7;
+
+/* ------------------------------ */
+
+$space-xs: 0.25em;
+$space-sm: 0.5em;
+$space-md: 1em;
+$radius: 5px;
+$border-width: 1px;
+
+/* ------------------------------ */
+
+$color-background-contrast: $base-grayscale-0;
+$color-background-weak: $base-grayscale-50;
+$color-border: $base-transparent-50;
+$color-text-primary: $base-grayscale-800;
+
+$color-interactive: $base-transparent-50;
+$color-outline: $base-transparent-100;
+
+$color-tone-1: $base-red-500;
+$color-tone-2: $base-green-500;
+$color-tone-3: $base-blue-500;
+$color-tone-4: $base-purple-500;
+$color-tone-5: $base-grayscale-500;
+
+/* ------------------------------ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Pretendard Variable", sans-serif;
+  font-size: 14px;
+  background-color: $color-background-contrast;
+  color: $color-text-primary;
+}
+
+input {
+  font-size: 1em;
+  background: $color-interactive;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius;
+  &[type="text"] {
+    padding: $space-sm $space-md;
+  }
+}
+
+topbar {
+  min-height: 4em;
+  align-items: center;
+  // backdrop-filter: blur(15px);
+  // background-color: #ffffff82;
+  gap: $space-sm;
+  border-bottom: $border-width solid $color-border;
+  display: flex;
+  padding: $space-xs $space-md;
+  box-sizing: border-box;
+}
+
+input,
+select {
+  outline-color: transparent;
+  outline-width: $border-width;
+  transition: all 200ms ease;
+  outline-style: solid;
+  &:focus {
+    outline-color: $color-outline;
+  }
+}
+
+search {
+  border-radius: $radius;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  background-color: $color-interactive;
+  input[type="text"] {
+    background-color: transparent;
+    flex: 1;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  select {
+    background-color: transparent;
+    border: none;
+    border-radius: 0 $radius $radius 0;
+    padding-left: $space-md;
+    border-right: $space-md solid transparent;
+  }
+}
+
+button {
+  gap: $space-xs;
+  border-radius: $radius;
+  padding: $space-sm $space-md;
+  align-items: center;
+  font-size: 1em;
+  border: none;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+button[variant="secondary"] {
+  color: $color-text-primary;
+  background-color: $color-background-weak;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+hr {
+  border: none;
+  border-bottom: $border-width solid $color-border;
+  padding: 0;
+  margin: 0;
+}
+
+vertical {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+.tone1 {
+  color: $color-tone-1;
+}
+.tone2 {
+  color: $color-tone-2;
+}
+.tone3 {
+  color: $color-tone-3;
+}
+.tone4 {
+  color: $color-tone-4;
+}
+.tone5 {
+  color: $color-tone-5;
+}
+
+nav {
+  display: flex;
+  min-width: 12em;
+  border-right: $border-width solid $color-border;
+  height: 100vh;
+}
+
+content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+}
+
+topbar {
+  flex-direction: row;
+}
+
+ruby {
+  height: min-content;
+  font-size: 1.5em;
+}
+
+list,
+container {
+  flex: 1;
+  height: auto;
+  overflow-y: scroll;
+  padding: $space-md 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  > :not(hr) {
+    margin: 0 $space-md;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+tabs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+tab {
+  gap: $space-sm;
+  padding: $space-sm $space-md;
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  &.active {
+    background-color: $color-background-weak;
+  }
+}
