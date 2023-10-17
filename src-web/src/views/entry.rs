@@ -91,14 +91,16 @@ impl Component for EntryView {
         html!(
             <>
                 <Bar back_button={true} title={self.title()} >
-                    <button onclick={onclick}>
-                        {"Collect"}
-                    </button>
-                    <Menu<models::Collection>
-                        open={self.collections_menu_open} options={self.collections.clone()}
-                        onclick={move |collection: models::Collection| {
-                        link.clone().send_message(Message::AddToCollection { collection_id: collection.id as u32 })
-                    }} />
+                    <div>
+                        <button onclick={onclick}>
+                            {"Collect"}
+                        </button>
+                        <Menu<models::Collection>
+                            open={self.collections_menu_open} options={self.collections.clone()}
+                            onclick={move |collection: models::Collection| {
+                            link.clone().send_message(Message::AddToCollection { collection_id: collection.id as u32 })
+                        }} />
+                    </div>
                 </Bar>
                 {
                     self.entry.iter().cloned().map(|entry| {

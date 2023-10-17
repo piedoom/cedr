@@ -25,6 +25,8 @@ $space-md: 1em;
 $radius: 5px;
 $border-width: 1px;
 
+$speed: 100ms;
+
 /* ------------------------------ */
 
 $color-background-contrast: $base-grayscale-0;
@@ -219,4 +221,25 @@ tab {
   &.active {
     background-color: $color-background-weak;
   }
+}
+menucontainer {
+  position: relative;
+}
+menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background-color: $color-background-contrast;
+  box-shadow: $color-interactive 0 0 $space-md;
+  width: 14em;
+  left: -14em;
+}
+
+menuitem {
+  &:hover {
+    background-color: $color-interactive;
+  }
+  transition: background-color ease $speed;
+  padding: $space-sm $space-md;
+  cursor: pointer;
 }

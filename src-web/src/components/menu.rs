@@ -49,6 +49,7 @@ where
         html! {
             <>
             if self.open {
+                <menucontainer>
                 <menu>
                     {
                         options.into_iter().map(move |option| {
@@ -62,6 +63,7 @@ where
                         }).collect::<Html>()
                     }
                 </menu>
+                </menucontainer>
             }
             </>
         }

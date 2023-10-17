@@ -80,7 +80,7 @@ impl Component for SearchView {
                                     }
                                 }>
                                 </List::<models::Entry>>
-                            }
+                    }
                             // results.iter().map(|term| {
                             //     html! {
                             //         <a href={format!("/term/{}", term.0.id)}>
