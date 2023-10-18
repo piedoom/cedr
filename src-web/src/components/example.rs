@@ -2,7 +2,7 @@ use yew::prelude::*;
 
 use crate::Sentence;
 
-use super::*;
+
 pub struct Examples;
 
 #[derive(Properties, PartialEq)]

@@ -1,18 +1,17 @@
 use crate::commands::{self};
-use crate::views::{self, entry};
+use crate::views::{self};
 use crate::{components::*, Route};
 use shared::models;
 use shared::InputMethod;
 use web_sys::{HtmlInputElement, HtmlOptionElement};
 use yew::prelude::*;
 
-use crate::{components, invoke, Settings};
+use crate::invoke;
 
 pub struct SearchView {
     search: String,
     method: InputMethod,
     results: Option<Vec<models::Entry>>,
-    settings: Settings,
 }
 
 // Define the possible messages which can be sent to the component
@@ -32,7 +31,6 @@ impl Component for SearchView {
             search: Default::default(),
             method: InputMethod::Auto,
             results: Default::default(),
-            settings: Settings::default(),
         }
     }
 

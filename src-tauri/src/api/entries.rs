@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use chinese_detection::classify;
 use shared::{models, Id, InputMethod};
 use sqlx::{self, Pool, Sqlite};
@@ -10,7 +8,7 @@ pub async fn query(
     method: &InputMethod,
 ) -> anyhow::Result<Vec<models::Entry>, sqlx::Error> {
     match method {
-        InputMethod::Auto => match classify(&query) {
+        InputMethod::Auto => match classify(query) {
             chinese_detection::ClassificationResult::ZH => query_chinese(pool, query).await,
             chinese_detection::ClassificationResult::EN => query_english(pool, query).await,
             chinese_detection::ClassificationResult::PY => query_pinyin(pool, query).await,

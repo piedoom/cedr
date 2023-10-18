@@ -1,8 +1,7 @@
 //! Manage the dictionary
-use hash32::Hasher;
+
 use shared::models;
 use sqlx::{Pool, QueryBuilder, Sqlite};
-use std::hash::Hash;
 
 use anyhow::{anyhow, Context};
 use libflate::gzip::Decoder;
@@ -37,15 +36,6 @@ pub async fn load_cedict_dictionary_file(
     path: impl AsRef<Path>,
     pool: &Pool<Sqlite>,
 ) -> anyhow::Result<()> {
-    struct TempTerm {
-        traditional: String,
-        simplified: String,
-        pinyin: String,
-        pinyin_numbers: String,
-        pinyin_raw: String,
-        tones: String,
-    }
-
     let mut file = OpenOptions::new()
         .read(true)
         .open(path)
@@ -54,7 +44,7 @@ pub async fn load_cedict_dictionary_file(
     file.read_to_string(&mut buf)?;
 
     let mut entries: Vec<models::Entry> = Vec::new();
-    let mut definitions: Vec<(String, String)> = Vec::new();
+    let _definitions: Vec<(String, String)> = Vec::new();
 
     // Split into lines
     for line in buf.split("\r\n") {
@@ -72,7 +62,7 @@ pub async fn load_cedict_dictionary_file(
                     ))?
                     .1;
                 // split at `=`
-                let (k, v) = pair
+                let (_k, _v) = pair
                     .split_once('=')
                     .ok_or(anyhow!("Invalid metadata format: no `=` found for KV pair"))?;
 

@@ -26,9 +26,9 @@ where
 
     type Properties = ListProps<T>;
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_ctx: &Context<Self>) -> Self {
         Self {
-            _phantom_data: PhantomData::default(),
+            _phantom_data: PhantomData,
         }
     }
 

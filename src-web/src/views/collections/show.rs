@@ -41,7 +41,7 @@ impl Component for Show {
         Self(Default::default())
     }
 
-    fn view(&self, ctx: &Context<Self>) -> Html {
+    fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
         <>
             if self.0.is_some() {
@@ -61,7 +61,7 @@ impl Component for Show {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             CollectionMsg::Update(collection) => {
                 self.0 = Some(collection);

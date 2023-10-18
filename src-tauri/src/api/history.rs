@@ -1,7 +1,7 @@
-use std::collections::{hash_map, HashMap};
+
 
 use shared::{models, Id};
-use sqlx::{types::chrono, Pool, Sqlite};
+use sqlx::{Pool, Sqlite};
 
 /// Get all items currently in the history
 pub async fn index(pool: &Pool<Sqlite>) -> anyhow::Result<Vec<models::Entry>, sqlx::Error> {

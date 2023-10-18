@@ -13,7 +13,7 @@ fn main() {
 
 /// Interact with Tauri
 pub mod commands {
-    use serde::{Deserialize, Serialize};
+    use serde::Serialize;
     use shared::InputMethod;
 
     #[derive(Serialize)]
@@ -119,25 +119,21 @@ impl From<[HexColor; 5]> for ToneTheme {
     }
 }
 
-pub struct App {
-    settings: Settings,
-}
+pub struct App;
 
 impl Component for App {
     type Message = ();
     type Properties = ();
 
     fn create(_ctx: &Context<Self>) -> Self {
-        Self {
-            settings: Settings::default(),
-        }
+        Self
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, _msg: Self::Message) -> bool {
         false
     }
 
-    fn view(&self, ctx: &Context<Self>) -> Html {
+    fn view(&self, _ctx: &Context<Self>) -> Html {
         //let navigator = ctx.link().navigator();
         html! {
             <yew_router::BrowserRouter>
@@ -168,7 +164,7 @@ impl Component for Root {
 
     type Properties = ();
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_ctx: &Context<Self>) -> Self {
         Self
     }
 

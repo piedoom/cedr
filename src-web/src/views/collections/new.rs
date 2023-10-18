@@ -1,4 +1,4 @@
-use shared::models;
+
 use wasm_bindgen::JsCast;
 use web_sys::{EventTarget, FormData, HtmlFormElement};
 use yew::prelude::*;
@@ -28,7 +28,7 @@ impl Component for New {
     type Message = CollectionNewMsg;
     type Properties = ();
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_ctx: &Context<Self>) -> Self {
         Self
     }
 

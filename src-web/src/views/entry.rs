@@ -79,7 +79,7 @@ impl Component for EntryView {
         let link = ctx.link().clone();
         let onclick = move |e: MouseEvent| {
             link.send_message(Message::ToggleCollectionsMenu);
-            let target = e.target().unwrap();
+            let _target = e.target().unwrap();
         };
         let link = ctx.link().clone();
 

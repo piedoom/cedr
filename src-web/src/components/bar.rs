@@ -9,7 +9,7 @@ impl Component for Bar {
 
     type Properties = BarProps;
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_ctx: &Context<Self>) -> Self {
         Self
     }
 

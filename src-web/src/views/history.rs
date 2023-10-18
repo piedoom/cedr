@@ -1,6 +1,6 @@
 use shared::models;
 use wasm_bindgen::JsValue;
-use web_sys::console;
+
 use yew::prelude::*;
 
 use crate::{components::*, invoke, views::View, Route};

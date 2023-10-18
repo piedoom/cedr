@@ -36,7 +36,7 @@ impl Component for Index {
         }
     }
 
-    fn view(&self, ctx: &Context<Self>) -> Html {
+    fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
         <>
             <Bar title={self.title()}>
@@ -56,7 +56,7 @@ impl Component for Index {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             CollectionsMsg::Update(collections) => {
                 self.collections = collections;

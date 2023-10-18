@@ -1,9 +1,6 @@
-use std::{marker::PhantomData, rc::Rc};
+use std::marker::PhantomData;
 
 use yew::prelude::*;
-use yew_router::scope_ext::RouterScopeExt;
-
-use crate::{components::*, Route};
 
 pub struct Tab<T>
 where
@@ -33,9 +30,9 @@ where
 
     type Properties = TabProps<T>;
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_ctx: &Context<Self>) -> Self {
         Self {
-            _phantom_data: PhantomData::default(),
+            _phantom_data: PhantomData,
         }
     }
 
@@ -47,9 +44,7 @@ where
                         html! { <i class={icon} /> }
                     })
                 }
-                { ctx.props().children.iter().map(|c| {
-                    c
-                }).collect::<Html>() }
+                { ctx.props().children.iter().collect::<Html>() }
             </tab>
         }
     }
