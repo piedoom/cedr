@@ -1,5 +1,4 @@
 mod bar;
-mod definition;
 mod example;
 mod list;
 mod menu;
@@ -8,7 +7,6 @@ mod tabs;
 
 pub use {
     bar::Bar,
-    definition::Definitions,
     //example::Example,
     list::List,
     menu::Menu,

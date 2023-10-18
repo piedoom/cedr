@@ -72,9 +72,9 @@ impl Component for SearchView {
                                 <List::<models::Entry> items={results.clone()} render={
                                     |entry: models::Entry| {
                                         html! {
-                                            <Link to={Route::Entry{id: entry.term.id as u32}}>
-                                                <Ruby term={entry.term}/>
-                                                <Definitions definitions={entry.definitions}/>
+                                            <Link to={Route::Entry{id: entry.id as u32}}>
+                                                <Ruby entry={entry.clone()}/>
+                                                <p> { entry.definition } </p>
                                             </Link>
                                         }
                                     }
@@ -121,7 +121,6 @@ impl Component for SearchView {
                                     serde_wasm_bindgen::to_value(&commands::Query {
                                         method,
                                         query: search,
-                                        include_sentences: false,
                                     })
                                     .unwrap(),
                                 )

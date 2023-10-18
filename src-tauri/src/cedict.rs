@@ -1,5 +1,6 @@
 //! Manage the dictionary
 use hash32::Hasher;
+use shared::models;
 use sqlx::{Pool, QueryBuilder, Sqlite};
 use std::hash::Hash;
 
@@ -15,6 +16,8 @@ pub const CEDICT_FILENAME: &str = "cedict.txt";
 pub const CEDICT_DOWNLOAD_URL: &str =
     "http://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz";
 pub const CEDICT_NAME: &str = "cedict";
+pub const CEDICT_LICENSE: &str =
+    "Creative Commons Attribution-ShareAlike 4.0 International License";
 const SQLITE_MAX_ARGS: usize = 32766;
 
 /// Download the newest version of CEDICT
@@ -50,7 +53,7 @@ pub async fn load_cedict_dictionary_file(
     let mut buf = String::new();
     file.read_to_string(&mut buf)?;
 
-    let mut terms: Vec<TempTerm> = Vec::new();
+    let mut entries: Vec<models::Entry> = Vec::new();
     let mut definitions: Vec<(String, String)> = Vec::new();
 
     // Split into lines
@@ -139,54 +142,71 @@ pub async fn load_cedict_dictionary_file(
                 let mut pinyin_raw = pinyin_numbers.clone();
                 pinyin_raw.retain(|c| !r"12345".contains(c));
 
-                let term = TempTerm {
-                    traditional: traditional.clone(),
+                entries.push(models::Entry {
+                    traditional,
                     simplified,
-                    pinyin,
                     pinyin_numbers,
                     pinyin_raw,
+                    pinyin,
                     tones: tones.iter().map(ToString::to_string).collect(),
-                };
-                terms.push(term);
-
-                // further split definitions_string into separate definitions split by a newline
-                for def in definitions_string.lines() {
-                    definitions.push((traditional.clone(), def.to_string()));
-                }
+                    definition: definitions_string,
+                    id: Default::default(),
+                    source_id: Default::default(),
+                    updated_at: Default::default(),
+                });
             }
         }
     }
 
+    // get or insert the source
+    let maybe_source = sqlx::query_as!(
+        models::Source,
+        "SELECT s.* FROM sources s WHERE s.name = ?",
+        CEDICT_NAME
+    )
+    .fetch_optional(pool)
+    .await?;
+
+    let source_id = match maybe_source {
+        Some(source) => source.id,
+        None => {
+            let source = models::Source {
+                id: Default::default(),
+                name: CEDICT_NAME.into(),
+                url: CEDICT_DOWNLOAD_URL.into(),
+                license: Some(CEDICT_LICENSE.into()),
+                updated_at: Default::default(),
+            };
+            // insert new source
+            sqlx::query!(
+                "INSERT INTO sources ( name, url, license ) VALUES (?1, ?2, ?3)",
+                source.name,
+                source.url,
+                source.license
+            )
+            .execute(pool)
+            .await?
+            .last_insert_rowid()
+        }
+    };
+
+    const NUM_COLUMNS: usize = 8;
     // split builder into manageable chunks so we don't get an error
-    for chunk in terms.chunks(SQLITE_MAX_ARGS / 6) {
+    for chunk in entries.chunks(SQLITE_MAX_ARGS / NUM_COLUMNS) {
         let mut builder = QueryBuilder::<Sqlite>::new(
-                "INSERT INTO terms ( traditional, simplified, pinyin, pinyin_numbers, pinyin_raw, tones ) ",
-            );
+            r#"
+INSERT INTO entries ( traditional, simplified, pinyin, pinyin_numbers, pinyin_raw, tones, definition, source_id ) 
+"#,
+        );
         builder.push_values(chunk, |mut b, term| {
-            //let hash =
             b.push_bind(&term.traditional)
                 .push_bind(&term.simplified)
                 .push_bind(&term.pinyin)
                 .push_bind(&term.pinyin_numbers)
                 .push_bind(&term.pinyin_raw)
-                .push_bind(&term.tones);
-        });
-        builder.build().execute(pool).await?;
-    }
-
-    for chunk in definitions.chunks(SQLITE_MAX_ARGS / 4) {
-        let mut builder = QueryBuilder::<Sqlite>::new(
-            "INSERT INTO definitions ( term, source_id, definition, hash ) ",
-        );
-        builder.push_values(chunk, |mut b, entry| {
-            b.push_bind(&entry.0)
-                .push_bind(0)
-                .push_bind(&entry.1)
-                .push_bind({
-                    let mut hasher = hash32::Murmur3Hasher::default();
-                    format!("{}{}{}", entry.0, 0, entry.1).hash(&mut hasher);
-                    hasher.finish32()
-                });
+                .push_bind(&term.tones)
+                .push_bind(&term.definition)
+                .push_bind(source_id);
         });
         builder.build().execute(pool).await?;
     }

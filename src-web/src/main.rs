@@ -21,7 +21,6 @@ pub mod commands {
     pub struct Query {
         pub method: InputMethod,
         pub query: String,
-        pub include_sentences: bool,
     }
 }
 

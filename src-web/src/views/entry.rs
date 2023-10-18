@@ -28,7 +28,6 @@ impl Component for EntryView {
         #[serde(rename_all = "camelCase")]
         pub struct GetTerm {
             pub id: u32,
-            pub include_sentences: bool,
         }
         #[derive(Serialize, Deserialize)]
         #[serde(rename_all = "camelCase")]
@@ -42,11 +41,7 @@ impl Component for EntryView {
             let result: models::Entry = serde_wasm_bindgen::from_value({
                 invoke(
                     "get_term",
-                    serde_wasm_bindgen::to_value(&GetTerm {
-                        id,
-                        include_sentences: true,
-                    })
-                    .unwrap(),
+                    serde_wasm_bindgen::to_value(&GetTerm { id }).unwrap(),
                 )
                 .await
             })
@@ -107,8 +102,8 @@ impl Component for EntryView {
                         html! {
                             <container>
                                 // <components::Ruby simplified={self.0.clone().map(|x| x.simplified).unwrap_or_default()} pinyin={self.0.clone().map(|x| x.pinyin).unwrap_or_default()} tones={self.0.clone().map(|x| x.tones_u8()).unwrap_or_default()}></components::Ruby>
-                                <Ruby term={entry.term}></Ruby>
-                                <Definitions definitions={entry.definitions}/>
+                                <Ruby entry={entry.clone()}></Ruby>
+                                <p> { entry.definition } </p>
                             </container>
                         }
                     }).collect::<Html>()
@@ -139,12 +134,12 @@ impl Component for EntryView {
                 true
             }
             Message::AddToCollection { collection_id } => {
-                let term_id = self.entry.clone().unwrap().term.id as u32;
+                let entry_id = self.entry.clone().unwrap().id as u32;
                 ctx.link().send_future(async move {
                     invoke(
                         "collections_add_term",
                         serde_wasm_bindgen::to_value(&CollectTerm {
-                            term_id,
+                            term_id: entry_id,
                             collection_id,
                         })
                         .unwrap(),
@@ -162,7 +157,7 @@ impl Component for EntryView {
 
 impl crate::views::View for EntryView {
     fn title(&self) -> Option<String> {
-        self.entry.clone().map(|t| t.term.simplified)
+        self.entry.clone().map(|t| t.simplified)
     }
 }
 

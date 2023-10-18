@@ -41,9 +41,9 @@ impl yew::Component for HistoryView {
                     items={self.history.clone()}
                     render={|entry: models::Entry| {
                         html! {
-                            <Link to={Route::Entry { id: entry.term.id as u32 }}>
-                                <Ruby term={entry.term} />
-                                <Definitions definitions={entry.definitions} />
+                            <Link to={Route::Entry { id: entry.id as u32 }}>
+                                <Ruby entry={entry.clone()} />
+                                <p> { entry.definition } </p>
                             </Link>
                         }
                     }}>

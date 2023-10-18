@@ -7,7 +7,7 @@ pub struct Ruby;
 
 #[derive(Properties, PartialEq)]
 pub struct RubyProps {
-    pub term: models::Term,
+    pub entry: models::Entry,
 }
 
 impl Component for Ruby {
@@ -19,17 +19,17 @@ impl Component for Ruby {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let term = ctx.props().term.clone();
+        let entry = ctx.props().entry.clone();
         html! {
             // Wrap in a div to fix the issue where the box model doesn't account for the pronunciation
             <div>
                 <ruby>
                     {
 
-                        term.simplified.chars()
+                        entry.simplified.chars()
                             .map(String::from)
-                            .zip(term.pinyin.split(' '))
-                            .zip(term.tones_u8())
+                            .zip(entry.pinyin.split(' '))
+                            .zip(entry.tones_u8())
                             .map(|((character, pinyin), tone)|
                             html!{
                                 <>

@@ -1,12 +1,12 @@
 use std::fmt::Display;
 
+use crate::Id;
+
 #[derive(Default, Clone, serde::Deserialize, serde::Serialize, PartialEq)]
 pub struct Collection {
-    #[cfg(target_arch = "wasm32")]
-    pub id: u32,
-    #[cfg(not(target_arch = "wasm32"))]
-    pub id: i64,
+    pub id: Id,
     pub name: String,
+    pub updated_at: chrono::NaiveDateTime,
 }
 
 #[derive(Default, Clone, serde::Deserialize, serde::Serialize, PartialEq)]
