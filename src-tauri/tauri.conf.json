@@ -3,7 +3,7 @@
     "beforeBuildCommand": "trunk --config ./src-web/Trunk.toml build",
     "beforeDevCommand": "trunk --config ./src-web/Trunk.toml serve",
     "devPath": "http://localhost:1420",
-    "distDir": "../dist",
+    "distDir": "../src-web/dist",
     "withGlobalTauri": true
   },
   "package": {
@@ -25,7 +25,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "org.doomy.cedr",
       "targets": "all"
     },
     "security": {

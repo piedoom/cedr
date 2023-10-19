@@ -1,7 +1,7 @@
 use shared::models;
 use yew::prelude::*;
 
-use crate::{components::*, invoke, Route};
+use crate::{components::*, invoke, views::View, Route};
 
 pub struct Show(pub Option<models::CollectionWithEntries>);
 
@@ -45,6 +45,7 @@ impl Component for Show {
         html! {
         <>
             if self.0.is_some() {
+            <Bar back_button={true} title={self.title()}/>
             <List<models::Entry>
                 items={self.0.clone().unwrap().entries}
                 render={|entry: models::Entry| {
@@ -68,5 +69,11 @@ impl Component for Show {
                 true
             }
         }
+    }
+}
+
+impl crate::View for Show {
+    fn title(&self) -> Option<String> {
+        self.0.clone().map(|t| t.collection.name)
     }
 }

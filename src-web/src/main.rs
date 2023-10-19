@@ -31,18 +31,18 @@ pub struct Sentence {
     pub translations: Vec<String>,
 }
 
-impl From<tatoebars::Sentence> for Sentence {
-    fn from(value: tatoebars::Sentence) -> Self {
-        Self {
-            text: value.text.to_string(),
-            translations: value
-                .translations
-                .into_iter()
-                .map(ToString::to_string)
-                .collect(),
-        }
-    }
-}
+// impl From<tatoebars::Sentence> for Sentence {
+//     fn from(value: tatoebars::Sentence) -> Self {
+//         Self {
+//             text: value.text.to_string(),
+//             translations: value
+//                 .translations
+//                 .into_iter()
+//                 .map(ToString::to_string)
+//                 .collect(),
+//         }
+//     }
+// }
 
 #[wasm_bindgen]
 extern "C" {

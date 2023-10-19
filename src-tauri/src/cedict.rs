@@ -1,5 +1,6 @@
 //! Manage the dictionary
 
+use etcetera::{choose_app_strategy, AppStrategy, AppStrategyArgs};
 use shared::models;
 use sqlx::{Pool, QueryBuilder, Sqlite};
 
@@ -205,9 +206,17 @@ INSERT INTO entries ( traditional, simplified, pinyin, pinyin_numbers, pinyin_ra
 }
 
 pub(crate) async fn build_dictionary(pool: &Pool<Sqlite>) -> anyhow::Result<()> {
-    let filename = Path::new(&dotenv::var("DATA_DIR")?).join(CEDICT_FILENAME);
-    if !filename.exists() {
-        download_newest_cedict(CEDICT_DOWNLOAD_URL, &filename).await?;
-    }
+    let strategy = choose_app_strategy(AppStrategyArgs {
+        top_level_domain: "doomy".to_string(),
+        author: "doomy".to_string(),
+        app_name: "cedr".to_string(),
+    })
+    .unwrap();
+
+    let data_path = strategy.data_dir();
+
+    let filename = data_path.join(CEDICT_FILENAME);
+    download_newest_cedict(CEDICT_DOWNLOAD_URL, &filename).await?;
+
     load_cedict_dictionary_file(filename, pool).await
 }

@@ -54,6 +54,8 @@ body {
   font-size: 14px;
   background-color: $color-background-contrast;
   color: $color-text-primary;
+  user-select: none;
+  cursor: default;
 }
 
 input {
@@ -120,12 +122,16 @@ button {
   border: none;
   cursor: pointer;
   transition: all 200ms ease;
+  color: $color-text-primary;
+  transition: all 200ms ease;
+  background-color: transparent;
+  &:hover {
+    background-color: $color-background-weak;
+  }
 }
 
-button[variant="secondary"] {
-  color: $color-text-primary;
-  background-color: $color-background-weak;
-}
+// button[variant="secondary"] {
+// }
 
 a {
   text-decoration: none;
