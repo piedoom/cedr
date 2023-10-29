@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT e.*\nFROM entries e\nWHERE\n    REPLACE(e.pinyin, ' ', '') LIKE '%' || ?1 || '%' OR \n    REPLACE(e.pinyin_numbers, ' ', '') LIKE '%' || ?1 || '%' LIMIT 100\n",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "traditional",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "simplified",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin_numbers",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin_raw",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "definition",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "tones",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 8,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "source_id",
+        "ordinal": 9,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "449a8d1fb0948367c4e8694e866a7597c298ac11611019920af68b8ce694715b"
+}

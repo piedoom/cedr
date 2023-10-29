@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO collections_entries (entry_id, collection_id)\n        VALUES ((SELECT entries.id FROM entries WHERE entries.traditional = ?1), ?2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "52dc12587fed93f4470add534a9946a32e2d804adf2088a97898a6edd82d1e4d"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM collections_entries WHERE (collection_id, entry_id) = (?1, ?2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "345baefedbb1c72335159bdb3fd56c12d71e83b6fc9e7b8d71307432b05f17ed"
+}

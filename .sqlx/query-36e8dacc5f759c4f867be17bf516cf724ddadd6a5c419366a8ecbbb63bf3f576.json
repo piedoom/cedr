@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT e.*\nFROM entries e\nINNER JOIN history h ON e.id = h.entry_id\nORDER BY h.created_at DESC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "traditional",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "simplified",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin_numbers",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin_raw",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "definition",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "tones",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 8,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "source_id",
+        "ordinal": 9,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "36e8dacc5f759c4f867be17bf516cf724ddadd6a5c419366a8ecbbb63bf3f576"
+}

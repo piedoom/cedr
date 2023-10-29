@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT collections.* FROM collections",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 2,
+        "type_info": "Datetime"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "c89ceb3503f0274c12c861729251cc8703f56e6fc957865432d275741bed0a4b"
+}

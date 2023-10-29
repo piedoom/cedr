@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT e.*\nFROM entries e\nINNER JOIN collections_entries ce ON e.id = ce.entry_id\nWHERE ce.collection_id = ?\n    ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "traditional",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "simplified",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin_numbers",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin_raw",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "definition",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "tones",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 8,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "source_id",
+        "ordinal": 9,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "616d312a5cbe669fdae00504bee502cc6b4f56adf6c798fed91f9781d4c3fb27"
+}

@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT e.*\nFROM entries e\nWHERE e.traditional LIKE '%' || ?1 || '%' \n    OR e.simplified LIKE '%' || ?1 || '%' \n    ORDER BY (e.traditional LIKE ?1 || '%' OR e.simplified LIKE ?1 || '%') DESC\nLIMIT 100\n",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "traditional",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "simplified",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin_numbers",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "pinyin_raw",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "definition",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "tones",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 8,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "source_id",
+        "ordinal": 9,
+        "type_info": "Int64"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "2d1828ce774081435e6cf5f5501c6c201df0c30384ea49ebd1376fe76bdfd2d4"
+}
