@@ -108,7 +108,7 @@ impl Component for SearchView {
             }
             Message::RequestResults => {
                 let search = self.search.clone();
-                let method = self.method.clone();
+                let method = self.method;
                 if !search.is_empty() {
                     ctx.link()
                         //command query(input_method, search).await

@@ -2,7 +2,7 @@
 
 use chrono::NaiveDateTime;
 
-use crate::{Id};
+use crate::Id;
 
 #[derive(Clone, serde::Deserialize, serde::Serialize, PartialEq)]
 pub struct Entry {

@@ -17,6 +17,8 @@ enum MenuAction {
     #[default]
     None,
     UpdateDictionary,
+    ExportCollections,
+    ImportCollections,
 }
 
 impl From<MenuId> for MenuAction {
@@ -41,8 +43,6 @@ async fn main() {
     let database_path = data_path.join("data.sqlite");
     let database_path = database_path.to_str().unwrap();
 
-    dbg!(&database_path);
-
     if !sqlx::Sqlite::database_exists(database_path).await.unwrap() {
         sqlx::Sqlite::create_database(database_path).await.unwrap();
     }
@@ -61,7 +61,25 @@ async fn main() {
     tauri::Builder::default()
         .menu(|app| {
             MenuBuilder::new(app)
-                .item(
+                .items(&[
+                    &SubmenuBuilder::new(app, "File")
+                        .items(&[
+                            &MenuItem::with_id(
+                                app,
+                                &MenuAction::ImportCollections,
+                                "Import collections",
+                                true,
+                                None,
+                            ),
+                            &MenuItem::with_id(
+                                app,
+                                &MenuAction::ExportCollections,
+                                "Export collections",
+                                true,
+                                None,
+                            ),
+                        ])
+                        .build()?,
                     &SubmenuBuilder::new(app, "Settings")
                         .items(&[
                             // &MenuItem::new(app, "Settings", true, None),
@@ -74,7 +92,7 @@ async fn main() {
                             ),
                         ])
                         .build()?,
-                )
+                ])
                 // .item(
                 //     &SubmenuBuilder::new(app, "Edit")
                 //         .items(&[
@@ -90,6 +108,28 @@ async fn main() {
             app.on_menu_event(move |_app, event| {
                 let pool = pool.clone();
                 match MenuAction::from(event.id) {
+                    MenuAction::ImportCollections => {
+                        let data_path = data_path.clone();
+                        tokio::spawn(async move {
+                            api::collections::import(
+                                &pool,
+                                data_path.clone().join("collections.ron"),
+                            )
+                            .await
+                            .unwrap()
+                        });
+                    }
+                    MenuAction::ExportCollections => {
+                        let data_path = data_path.clone();
+                        tokio::spawn(async move {
+                            api::collections::export(
+                                &pool,
+                                data_path.clone().join("collections.ron"),
+                            )
+                            .await
+                            .unwrap()
+                        });
+                    }
                     MenuAction::UpdateDictionary => {
                         tokio::spawn(async move {
                             cedict::build_dictionary(&pool).await.unwrap();

@@ -1,6 +1,6 @@
 pub mod models;
 
-#[derive(Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
+#[derive(Copy, Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
 pub enum InputMethod {
     Auto = 0,
     Pinyin = 1,
