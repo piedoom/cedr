@@ -46,8 +46,8 @@ pub struct Sentence {
 
 #[wasm_bindgen]
 extern "C" {
-    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "tauri"])]
-    pub(crate) async fn invoke(cmd: &str, args: JsValue) -> JsValue;
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "primitives"])]
+    async fn invoke(cmd: &str, args: JsValue) -> JsValue;
 }
 
 #[derive(Debug, Clone, PartialEq, yew_router::Routable)]

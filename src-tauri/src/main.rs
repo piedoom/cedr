@@ -47,8 +47,6 @@ async fn main() {
         sqlx::Sqlite::create_database(database_path).await.unwrap();
     }
 
-    // let crate_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-
     let pool = SqlitePoolOptions::new()
         .connect(database_path)
         .await
