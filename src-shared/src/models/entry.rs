@@ -7,10 +7,7 @@ use crate::Id;
 #[derive(Clone, serde::Deserialize, serde::Serialize, PartialEq)]
 pub struct Entry {
     pub id: Id,
-    #[cfg(target_arch = "wasm32")]
-    pub source_id: u32,
-    #[cfg(not(target_arch = "wasm32"))]
-    pub source_id: i64,
+    pub source_id: Id,
     pub traditional: String,
     pub simplified: String,
     /// Pinyin with numbers

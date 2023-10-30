@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS entries (
     updated_at                  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     source_id                   INTEGER NOT NULL,
 
-    FOREIGN KEY(source_id)      REFERENCES sources(id)
+    UNIQUE(traditional, simplified, pinyin_numbers) ON CONFLICT REPLACE,
+    FOREIGN KEY(source_id)      REFERENCES sources(id) ON UPDATE CASCADE
 );
 
 
