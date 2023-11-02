@@ -1,6 +1,4 @@
-
-
-use shared::{models, Id};
+use shared::{models, Int};
 use sqlx::{Pool, Sqlite};
 
 /// Get all items currently in the history
@@ -18,7 +16,7 @@ ORDER BY h.created_at DESC
     .await
 }
 
-pub async fn create(pool: &Pool<Sqlite>, entry_id: Id) -> anyhow::Result<Id, sqlx::Error> {
+pub async fn create(pool: &Pool<Sqlite>, entry_id: Int) -> anyhow::Result<Int, sqlx::Error> {
     // Remove history if it exists
     sqlx::query!("DELETE FROM history WHERE entry_id = ?", entry_id)
         .execute(pool)

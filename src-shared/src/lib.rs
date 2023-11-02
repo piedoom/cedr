@@ -9,9 +9,9 @@ pub enum InputMethod {
 }
 
 #[cfg(target_arch = "wasm32")]
-pub type Id = u32;
+pub type Int = u32;
 #[cfg(not(target_arch = "wasm32"))]
-pub type Id = i64;
+pub type Int = i64;
 
 impl std::fmt::Display for InputMethod {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

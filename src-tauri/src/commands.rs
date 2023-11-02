@@ -1,4 +1,4 @@
-use shared::{models, Id, InputMethod};
+use shared::{models, InputMethod, Int};
 use sqlx::{Pool, Sqlite};
 use tauri::State;
 
@@ -26,7 +26,7 @@ pub async fn history_index(pool: State<'_, Pool<Sqlite>>) -> Result<Vec<models::
 }
 
 #[tauri::command]
-pub async fn history_create(pool: State<'_, Pool<Sqlite>>, term_id: Id) -> Result<Id, String> {
+pub async fn history_create(pool: State<'_, Pool<Sqlite>>, term_id: Int) -> Result<Int, String> {
     history::create(pool.inner(), term_id)
         .await
         .map_err(tauri_err)
@@ -43,8 +43,18 @@ pub(crate) async fn initialize_dictionary_command(
 }
 
 #[tauri::command]
-pub async fn get_term(pool: State<'_, Pool<Sqlite>>, id: Id) -> Result<models::Entry, String> {
+pub async fn get_term(pool: State<'_, Pool<Sqlite>>, id: Int) -> Result<models::Entry, String> {
     entries::get(pool.inner(), id).await.map_err(tauri_err)
+}
+
+#[tauri::command]
+pub async fn entry_get_by_traditional(
+    pool: State<'_, Pool<Sqlite>>,
+    traditional: String,
+) -> Result<models::Entry, String> {
+    entries::get_by_traditional(pool.inner(), traditional)
+        .await
+        .map_err(tauri_err)
 }
 
 #[tauri::command]
@@ -57,7 +67,7 @@ pub(crate) async fn collections_index(
 #[tauri::command]
 pub(crate) async fn collections_get(
     pool: State<'_, Pool<Sqlite>>,
-    id: Id,
+    id: Int,
 ) -> Result<models::CollectionWithEntries, String> {
     collections::get(pool.inner(), id).await.map_err(tauri_err)
 }
@@ -66,7 +76,7 @@ pub(crate) async fn collections_get(
 pub(crate) async fn collections_create(
     pool: State<'_, Pool<Sqlite>>,
     name: String,
-) -> Result<Id, String> {
+) -> Result<Int, String> {
     collections::create(pool.inner(), name)
         .await
         .map_err(tauri_err)
@@ -75,10 +85,39 @@ pub(crate) async fn collections_create(
 #[tauri::command]
 pub(crate) async fn collections_add_term(
     pool: State<'_, Pool<Sqlite>>,
-    collection_id: Id,
-    term_id: Id,
-) -> Result<Id, String> {
+    collection_id: Int,
+    term_id: Int,
+) -> Result<Int, String> {
     collections::add_term(pool.inner(), collection_id, term_id)
+        .await
+        .map_err(tauri_err)
+}
+
+#[tauri::command]
+pub(crate) async fn scores_get_or_create(
+    pool: State<'_, Pool<Sqlite>>,
+    entry_id: Int,
+) -> Result<models::Score, String> {
+    scores::get_or_create(pool.inner(), entry_id)
+        .await
+        .map_err(tauri_err)
+}
+
+#[tauri::command]
+pub(crate) async fn scores_get(
+    pool: State<'_, Pool<Sqlite>>,
+    entry_id: Int,
+) -> Result<models::Score, String> {
+    scores::get(pool.inner(), entry_id).await.map_err(tauri_err)
+}
+
+#[tauri::command]
+pub(crate) async fn scores_update(
+    pool: State<'_, Pool<Sqlite>>,
+    entry_id: Int,
+    correct: bool,
+) -> Result<models::Score, String> {
+    scores::update(pool.inner(), entry_id, correct)
         .await
         .map_err(tauri_err)
 }

@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT scores.* FROM scores WHERE id=?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "level",
+        "ordinal": 1,
+        "type_info": "Int64"
+      },
+      {
+        "name": "entry_id",
+        "ordinal": 2,
+        "type_info": "Int64"
+      },
+      {
+        "name": "active",
+        "ordinal": 3,
+        "type_info": "Bool"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 4,
+        "type_info": "Datetime"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "cdffff98c11b38c92fe069b81773e5f3a909e123cae61bff32c13aca17397e23"
+}

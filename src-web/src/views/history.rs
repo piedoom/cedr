@@ -39,12 +39,13 @@ impl yew::Component for HistoryView {
                 }
                 <List<models::Entry>
                     items={self.history.clone()}
+                    route={|entry: models::Entry| Route::Entry {id: entry.id as u32} }
                     render={|entry: models::Entry| {
                         html! {
-                            <Link to={Route::Entry { id: entry.id as u32 }}>
+                            <>
                                 <Ruby entry={entry.clone()} />
-                                <p> { entry.definition } </p>
-                            </Link>
+                                <Definition definition={entry.definition} limit={3} />
+                            </>
                         }
                     }}>
                 </List<models::Entry>>

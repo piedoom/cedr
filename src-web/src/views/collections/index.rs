@@ -1,8 +1,7 @@
 use shared::models;
-use wasm_bindgen::JsValue;
 use yew::prelude::*;
 
-use crate::{components::*, invoke, Route, View};
+use crate::{api, components::*, Route, View};
 
 pub struct Index {
     pub collections: Vec<models::Collection>,
@@ -25,10 +24,7 @@ impl Component for Index {
 
     fn create(ctx: &Context<Self>) -> Self {
         ctx.link().send_future(async move {
-            let results: Vec<models::Collection> =
-                serde_wasm_bindgen::from_value(invoke("collections_index", JsValue::null()).await)
-                    .unwrap();
-
+            let results = api::collections::index().await.unwrap();
             CollectionsMsg::Update(results)
         });
         Self {
@@ -42,13 +38,14 @@ impl Component for Index {
             <Bar title={self.title()}>
                 <Link to={Route::CollectionNew}><button>{"New"}</button></Link>
             </Bar>
-            <List<models::Collection> items={self.collections.clone()} render={|collection: models::Collection|
+            <List<models::Collection>
+                items={self.collections.clone()}
+                route={|collection: models::Collection| Route::Collection { id: collection.id as u32 }}
+                render={|collection: models::Collection|
                 //
                 {
                     html! {
-                        <Link to={Route::Collection { id: collection.id as u32 }}>
-                            <h3>{collection.name}</h3>
-                        </Link>
+                        <h3>{collection.name}</h3>
                     }
                 }
             } />

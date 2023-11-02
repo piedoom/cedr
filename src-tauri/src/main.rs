@@ -10,7 +10,11 @@ use sqlx::migrate::MigrateDatabase;
 use sqlx::sqlite::SqlitePoolOptions;
 use std::{env, str::FromStr};
 use strum_macros::{Display, EnumString};
-use tauri::menu::{MenuBuilder, MenuId, MenuItem, SubmenuBuilder};
+use tauri::{
+    async_runtime::block_on,
+    menu::{MenuBuilder, MenuId, MenuItem, SubmenuBuilder},
+};
+use tauri_plugin_dialog::DialogExt;
 
 #[derive(Debug, EnumString, Display, Default)]
 enum MenuAction {
@@ -103,38 +107,29 @@ async fn main() {
         })
         .setup(move |app| {
             let pool = pool.clone();
-            app.on_menu_event(move |_app, event| {
+            app.on_menu_event(move |app, event| {
                 let pool = pool.clone();
                 match MenuAction::from(event.id) {
                     MenuAction::ImportCollections => {
-                        let data_path = data_path.clone();
-                        tokio::spawn(async move {
-                            api::collections::import(
-                                &pool,
-                                data_path.clone().join("collections.ron"),
-                            )
-                            .await
-                            .unwrap()
+                        app.dialog().file().pick_file(|path| {
+                            let path = path.unwrap();
+                            block_on(async move {
+                                api::collections::import(&pool, path.path).await.unwrap()
+                            });
                         });
                     }
                     MenuAction::ExportCollections => {
-                        let data_path = data_path.clone();
-                        tokio::spawn(async move {
-                            api::collections::export(
-                                &pool,
-                                data_path.clone().join("collections.ron"),
-                            )
-                            .await
-                            .unwrap()
+                        app.dialog().file().save_file(|path| {
+                            let path = path.unwrap();
+                            block_on(async move {
+                                api::collections::export(&pool, path).await.unwrap()
+                            });
                         });
                     }
                     MenuAction::UpdateDictionary => {
                         tokio::spawn(async move {
                             cedict::build_dictionary(&pool).await.unwrap();
                         });
-                        // std::thread::spawn(move || block_on(cedict::build_dictionary(&pool.clone())));
-                        // app.trigger_global(MenuAction::UpdateDictionary.to_string().as_str(), None)
-                        // cedict::build_dictionary(&pool).await.unwrap();
                     }
                     MenuAction::None => (),
                 }
@@ -148,12 +143,17 @@ async fn main() {
             commands::history_create,
             commands::initialize_dictionary_command,
             commands::get_term,
+            commands::entry_get_by_traditional,
             commands::collections_index,
             commands::collections_get,
             commands::collections_create,
             commands::collections_add_term,
+            commands::scores_get_or_create,
+            commands::scores_get,
+            commands::scores_update,
             // TODO: Get term
         ])
+        .plugin(tauri_plugin_dialog::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

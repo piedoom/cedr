@@ -5,10 +5,10 @@ use std::{
     path::PathBuf,
 };
 
-use shared::{models, Id};
+use shared::{models, Int};
 use sqlx::{Pool, Sqlite};
 
-pub async fn create(pool: &Pool<Sqlite>, name: String) -> anyhow::Result<Id> {
+pub async fn create(pool: &Pool<Sqlite>, name: String) -> anyhow::Result<Int> {
     let matches = sqlx::query!("INSERT INTO collections (name) VALUES (?1)", name)
         .execute(pool)
         .await?;
@@ -17,9 +17,9 @@ pub async fn create(pool: &Pool<Sqlite>, name: String) -> anyhow::Result<Id> {
 
 pub async fn add_term(
     pool: &Pool<Sqlite>,
-    collection_id: Id,
-    entry_id: Id,
-) -> Result<Id, sqlx::Error> {
+    collection_id: Int,
+    entry_id: Int,
+) -> Result<Int, sqlx::Error> {
     Ok(sqlx::query!(
         "INSERT INTO collections_entries (collection_id, entry_id) VALUES (?1, ?2)",
         collection_id,
@@ -33,9 +33,9 @@ pub async fn add_term(
 /// Add a term to the collection by the traditional characters instead of the [`Id`]
 pub async fn add_term_by_traditional(
     pool: &Pool<Sqlite>,
-    collection_id: Id,
+    collection_id: Int,
     traditional: String,
-) -> Result<Id, sqlx::Error> {
+) -> Result<Int, sqlx::Error> {
     Ok(sqlx::query!(
         r#"INSERT INTO collections_entries (entry_id, collection_id)
         VALUES ((SELECT entries.id FROM entries WHERE entries.traditional = ?1), ?2)"#,
@@ -71,7 +71,7 @@ pub async fn index(pool: &Pool<Sqlite>) -> Result<Vec<models::Collection>, sqlx:
 /// Get all entries in a collection
 pub async fn get(
     pool: &Pool<Sqlite>,
-    id: Id,
+    id: Int,
 ) -> Result<models::CollectionWithEntries, sqlx::Error> {
     let collection = sqlx::query_as!(
         models::Collection,

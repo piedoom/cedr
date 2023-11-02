@@ -2,12 +2,12 @@
 
 use chrono::NaiveDateTime;
 
-use crate::Id;
+use crate::Int;
 
 #[derive(Clone, serde::Deserialize, serde::Serialize, PartialEq)]
 pub struct Entry {
-    pub id: Id,
-    pub source_id: Id,
+    pub id: Int,
+    pub source_id: Int,
     pub traditional: String,
     pub simplified: String,
     /// Pinyin with numbers

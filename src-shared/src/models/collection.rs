@@ -1,10 +1,10 @@
-use crate::Id;
+use crate::Int;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
 #[derive(Default, Clone, Deserialize, Serialize, PartialEq)]
 pub struct Collection {
-    pub id: Id,
+    pub id: Int,
     pub name: String,
     pub updated_at: chrono::NaiveDateTime,
 }

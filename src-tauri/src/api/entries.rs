@@ -1,5 +1,5 @@
 use chinese_detection::classify;
-use shared::{models, Id, InputMethod};
+use shared::{models, InputMethod, Int};
 use sqlx::{self, Pool, Sqlite};
 
 pub async fn query(
@@ -72,8 +72,21 @@ pub async fn query_english(
     .await
 }
 
-pub async fn get(pool: &Pool<Sqlite>, id: Id) -> anyhow::Result<models::Entry, sqlx::Error> {
+pub async fn get(pool: &Pool<Sqlite>, id: Int) -> anyhow::Result<models::Entry, sqlx::Error> {
     sqlx::query_as!(models::Entry, "SELECT e.* FROM entries e WHERE id = ?", id)
         .fetch_one(pool)
         .await
+}
+
+pub async fn get_by_traditional(
+    pool: &Pool<Sqlite>,
+    traditional: String,
+) -> anyhow::Result<models::Entry, sqlx::Error> {
+    sqlx::query_as!(
+        models::Entry,
+        "SELECT e.* FROM entries e WHERE traditional = ? LIMIT 1",
+        traditional
+    )
+    .fetch_one(pool)
+    .await
 }

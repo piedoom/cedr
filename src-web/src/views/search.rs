@@ -67,25 +67,21 @@ impl Component for SearchView {
                     match &self.results {
                         Some(results) => {
                             html! {
-                                <List::<models::Entry> items={results.clone()} render={
+                                <List::<models::Entry>
+                                    items={results.clone()}
+                                    route={|entry: models::Entry| Route::Entry{id: entry.id as u32} }
+                                    render={
                                     |entry: models::Entry| {
                                         html! {
-                                            <Link to={Route::Entry{id: entry.id as u32}}>
+                                            <>
                                                 <Ruby entry={entry.clone()}/>
-                                                <p> { entry.definition } </p>
-                                            </Link>
+                                                <Definition definition={entry.definition} />
+                                            </>
                                         }
                                     }
                                 }>
                                 </List::<models::Entry>>
-                    }
-                            // results.iter().map(|term| {
-                            //     html! {
-                            //         <a href={format!("/term/{}", term.0.id)}>
-                            //             <components::Term definition={term.1.clone()} term={term.0.clone()}></components::Term>
-                            //         </a>
-                            //     }
-                            // }).collect::<Html>()
+                            }
                         },
                         // Show the history view as a default
                         None => {

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE scores SET level = level + 1 WHERE entry_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "19d7f569d2116ed4d40b67c6eb160522a583a879e8423b18bcc19b3eac5cb41a"
+}

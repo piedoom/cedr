@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS entries (
     FOREIGN KEY(source_id)      REFERENCES sources(id) ON UPDATE CASCADE
 );
 
-
 CREATE TABLE IF NOT EXISTS history (
     id                      INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     created_at              DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -57,6 +56,31 @@ CREATE TABLE IF NOT EXISTS collections_entries (
     FOREIGN KEY(collection_id) REFERENCES collections(id),
     FOREIGN KEY(entry_id) REFERENCES entries(id)
 );
+
+CREATE TABLE IF NOT EXISTS scores (
+    id                       INTEGER PRIMARY KEY NOT NULL,
+    level                    INTEGER NOT NULL DEFAULT 0,
+    entry_id                 INTEGER NOT NULL UNIQUE ON CONFLICT IGNORE,
+    active                   BOOLEAN NOT NULL DEFAULT false,
+    updated_at               DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    
+    FOREIGN KEY(entry_id)    REFERENCES entries(id)
+);
+
+CREATE TABLE IF NOT EXISTS scorelog (
+    id            INTEGER PRIMARY KEY NOT NULL,
+    correct       BOOLEAN NOT NULL,
+    time          DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    score_id      INTEGER NOT NULL,
+    
+    FOREIGN KEY(score_id)    REFERENCES scores(id)
+);
+
+CREATE TRIGGER IF NOT EXISTS update_scores_updated_at
+AFTER UPDATE ON scores
+BEGIN
+    UPDATE scores SET updated_at = DATETIME('now') WHERE id = NEW.id;
+END;
 
 -- -- FTS5 table for easier terms searching
 

@@ -21,12 +21,6 @@ web-sys = { version = "0.3", features = [
 js-sys = "0.3.64"
 hex_color = "2"
 gloo-console = "0.3.0"
-pinyin = "0.10"
-cedict = "0.3"
 yew-router = "0.18.0"
 # tatoebars = { path = "../../doomybotv2/lib/tatoebars", features = ["cnm"] }
-anyhow = "1.0.75"
-unicode-segmentation = "1.10.1"
-itertools = "0.11.0"
-chinese_detection = "2.0.3"
 shared = { path = "../src-shared" }

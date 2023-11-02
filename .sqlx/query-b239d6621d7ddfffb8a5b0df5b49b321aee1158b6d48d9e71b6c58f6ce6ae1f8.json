@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "\nINSERT OR IGNORE INTO scores (entry_id) VALUES (?); \nSELECT scores.* FROM scores",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "level",
+        "ordinal": 1,
+        "type_info": "Int64"
+      },
+      {
+        "name": "entry_id",
+        "ordinal": 2,
+        "type_info": "Int64"
+      },
+      {
+        "name": "active",
+        "ordinal": 3,
+        "type_info": "Bool"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 4,
+        "type_info": "Datetime"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "b239d6621d7ddfffb8a5b0df5b49b321aee1158b6d48d9e71b6c58f6ce6ae1f8"
+}

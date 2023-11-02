@@ -4,44 +4,58 @@
 @import "font.scss";
 @import "./public/line-awesome/css/line-awesome.min.css";
 
-$base-grayscale-0: #ffffff;
-$base-grayscale-50: #f5f5f5;
-$base-grayscale-500: #6e6e6e;
-$base-grayscale-800: #000;
+$accent: rgb(104, 58, 240);
+$tint: desaturate(darken($accent, 20), 15);
 
-$base-transparent-50: rgba(0, 0, 0, 0.06);
-$base-transparent-100: rgba(0, 0, 0, 0.2);
+$base-grayscale-0: white;
+$base-grayscale-5: rgba($tint, 0.03);
+$base-grayscale-10: rgba($tint, 0.07);
+$base-grayscale-30: #adadad;
+$base-grayscale-40: #6e6e6e;
+$base-grayscale-50: #000;
 
-$base-red-500: #cc2400;
-$base-green-500: #4e9d01;
-$base-blue-500: #0092e6;
-$base-purple-500: #b700c7;
+$base-red-50: #cc2400;
+$base-green-50: #4e9d01;
+$base-blue-50: #0092e6;
+$base-purple-50: #b700c7;
 
 /* ------------------------------ */
 
 $space-xs: 0.25em;
 $space-sm: 0.5em;
 $space-md: 1em;
-$radius: 5px;
+$radius: 2px;
 $border-width: 1px;
 
 $speed: 100ms;
+$ease: ease-in-out;
 
 /* ------------------------------ */
 
 $color-background-contrast: $base-grayscale-0;
-$color-background-weak: $base-grayscale-50;
-$color-border: $base-transparent-50;
-$color-text-primary: $base-grayscale-800;
+$color-background-secondary: $base-grayscale-5;
 
-$color-interactive: $base-transparent-50;
-$color-outline: $base-transparent-100;
+$color-background-input: $base-grayscale-5;
 
-$color-tone-1: $base-red-500;
-$color-tone-2: $base-green-500;
-$color-tone-3: $base-blue-500;
-$color-tone-4: $base-purple-500;
-$color-tone-5: $base-grayscale-500;
+$color-background-hover: $base-grayscale-5;
+$color-background-active: $base-grayscale-10;
+
+$color-border: $base-grayscale-10;
+$color-outline: $base-grayscale-10;
+
+$color-text-primary: $base-grayscale-50;
+$color-text-secondary: $base-grayscale-30;
+$color-text-contrast: $base-grayscale-0;
+
+$color-tone-1: $base-red-50;
+$color-tone-2: $base-green-50;
+$color-tone-3: $base-blue-50;
+$color-tone-4: $base-purple-50;
+$color-tone-5: $base-grayscale-40;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
 
 /* ------------------------------ */
 
@@ -54,13 +68,13 @@ body {
   font-size: 14px;
   background-color: $color-background-contrast;
   color: $color-text-primary;
-  user-select: none;
+  user-select: text;
   cursor: default;
 }
 
 input {
   font-size: 1em;
-  background: $color-interactive;
+  background: $color-background-input;
   color: $color-text-primary;
   border: none;
   border-radius: $radius;
@@ -70,14 +84,16 @@ input {
 }
 
 topbar {
-  min-height: 4em;
+  flex-direction: row;
+  min-height: 3em;
   align-items: center;
   // backdrop-filter: blur(15px);
   // background-color: #ffffff82;
+  font-weight: $font-weight-medium;
   gap: $space-sm;
   border-bottom: $border-width solid $color-border;
   display: flex;
-  padding: $space-xs $space-md;
+  padding: 0 $space-md;
   box-sizing: border-box;
 }
 
@@ -85,7 +101,7 @@ input,
 select {
   outline-color: transparent;
   outline-width: $border-width;
-  transition: all 200ms ease;
+  transition: all 200ms $ease;
   outline-style: solid;
   &:focus {
     outline-color: $color-outline;
@@ -97,7 +113,8 @@ search {
   display: flex;
   flex-direction: row;
   flex: 1;
-  background-color: $color-interactive;
+  background-color: $color-background-active;
+  margin: $space-md 0;
   input[type="text"] {
     background-color: transparent;
     flex: 1;
@@ -114,6 +131,8 @@ search {
 }
 
 button {
+  font-weight: $font-weight-medium;
+  color: $color-text-contrast;
   gap: $space-xs;
   border-radius: $radius;
   padding: $space-sm $space-md;
@@ -121,17 +140,21 @@ button {
   font-size: 1em;
   border: none;
   cursor: pointer;
-  transition: all 200ms ease;
-  color: $color-text-primary;
-  transition: all 200ms ease;
-  background-color: transparent;
-  &:hover {
-    background-color: $color-background-weak;
-  }
+  color: $color-text-contrast;
+  transition: all 200ms $ease;
+  background-color: $accent;
+  // &:hover {
+  //   background-color: $accent;
+  // }
 }
 
-// button[variant="secondary"] {
-// }
+button[variant="secondary"] {
+  color: $color-text-primary;
+  background-color: transparent;
+  &:hover {
+    background-color: $color-background-hover;
+  }
+}
 
 a {
   text-decoration: none;
@@ -156,6 +179,71 @@ horizontal {
   flex-direction: row;
 }
 
+vertical,
+horizontal {
+  &.start {
+    align-items: start;
+  }
+
+  &.center {
+    align-items: center;
+  }
+
+  &.end {
+    align-items: end;
+  }
+  &.xs {
+    gap: $space-xs;
+  }
+  &.sm {
+    gap: $space-sm;
+  }
+  &.md {
+    gap: $space-md;
+  }
+}
+
+rb {
+  width: fit-content;
+  display: grid;
+  justify-items: center;
+}
+
+hanzi,
+pinyin {
+  display: flex;
+  width: 1.5rem;
+}
+
+hanzi,
+traditional {
+  font-size: 1.5em;
+  justify-content: center;
+  border-radius: $radius;
+  cursor: pointer;
+  &:hover {
+    background-color: $color-background-hover;
+  }
+}
+
+traditional {
+  font-size: 1em;
+  color: $color-text-secondary;
+}
+
+pinyin {
+  font-size: 0.7em;
+  width: fit-content;
+  text-align: center;
+}
+
+box {
+  padding: $space-xs $space-sm;
+  // background-color: $color-background-secondary;
+  border-radius: $radius;
+  border: $border-width $color-border solid;
+}
+
 .tone1 {
   color: $color-tone-1;
 }
@@ -174,7 +262,7 @@ horizontal {
 
 nav {
   display: flex;
-  min-width: 12em;
+  width: fit-content;
   border-right: $border-width solid $color-border;
   height: 100vh;
 }
@@ -184,10 +272,6 @@ content {
   flex-direction: column;
   flex: 1;
   height: 100vh;
-}
-
-topbar {
-  flex-direction: row;
 }
 
 ruby {
@@ -200,15 +284,23 @@ container {
   flex: 1;
   height: auto;
   overflow-y: scroll;
-  padding: $space-md 0;
   display: flex;
   flex-direction: column;
-  gap: $space-md;
-  > :not(hr) {
-    margin: 0 $space-md;
-    display: flex;
-    flex-direction: column;
+}
+
+list listitem {
+  display: flex;
+  flex-direction: column;
+  padding: $space-md;
+  border-bottom: $color-border $border-width solid;
+  transition: background-color $speed $ease;
+  &:hover {
+    background-color: $color-background-hover;
   }
+}
+
+container {
+  padding: $space-md;
 }
 
 tabs {
@@ -219,13 +311,19 @@ tabs {
 
 tab {
   gap: $space-sm;
-  padding: $space-sm $space-md;
+  padding: $space-sm $space-sm;
+  padding-right: $space-md;
   cursor: pointer;
   display: flex;
   flex: 1;
   align-items: center;
+  font-weight: $font-weight-medium;
+  &:hover {
+    background-color: $color-background-hover;
+  }
   &.active {
-    background-color: $color-background-weak;
+    background-color: $color-background-active;
+    color: $accent;
   }
 }
 menucontainer {
@@ -236,16 +334,16 @@ menu {
   flex-direction: column;
   position: absolute;
   background-color: $color-background-contrast;
-  box-shadow: $color-interactive 0 0 $space-md;
+  box-shadow: $color-background-active 0 0 $space-md;
   width: 14em;
   left: -14em;
 }
 
 menuitem {
   &:hover {
-    background-color: $color-interactive;
+    background-color: $color-background-hover;
   }
-  transition: background-color ease $speed;
+  transition: background-color $ease $speed;
   padding: $space-sm $space-md;
   cursor: pointer;
 }

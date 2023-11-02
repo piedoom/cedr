@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO scorelog (correct, score_id) VALUES (?1, (SELECT id FROM scores WHERE entry_id = ?2))",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "d5031733b4c8c7be5ae10a23fc616fa8f0c2e6dd28e26b12fb04893a4c5a756f"
+}

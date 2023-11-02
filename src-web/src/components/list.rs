@@ -2,6 +2,8 @@ use std::marker::PhantomData;
 
 use yew::prelude::*;
 
+use super::Link;
+
 pub struct List<T>
 where
     T: PartialEq,
@@ -16,6 +18,8 @@ where
 {
     pub items: Vec<T>,
     pub render: Callback<T, Html>,
+    #[prop_or_default]
+    pub route: Option<Callback<T, crate::Route>>,
 }
 
 impl<T> Component for List<T>
@@ -33,18 +37,30 @@ where
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let ListProps { items, render } = ctx.props();
+        let ListProps {
+            items,
+            render,
+            route,
+        } = ctx.props();
 
         html! {
             <list>
                 { items
                     .iter()
                     .map(|item| {
-                        html! {
-                            <>
-                                { render.emit(item.clone()) }
-                                <hr/>
-                            </>
+                        let list_item = render.emit(item.clone());
+
+                        match route.clone() {
+                            Some(route) => {
+                                html! {
+                                    <Link to={route.emit(item.clone())}>
+                                        <listitem>
+                                            {list_item}
+                                        </listitem>
+                                    </Link>
+                                }
+                            }
+                            None => html! { <listitem> {list_item} </listitem> }
                         }
                     })
                     .collect::<Vec<_>>()

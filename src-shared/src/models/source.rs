@@ -1,8 +1,8 @@
-use crate::Id;
+use crate::Int;
 
 #[derive(Clone, serde::Deserialize, serde::Serialize, PartialEq)]
 pub struct Source {
-    pub id: Id,
+    pub id: Int,
     pub name: String,
     pub url: String,
     pub license: Option<String>,

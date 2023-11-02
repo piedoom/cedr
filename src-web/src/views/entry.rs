@@ -1,7 +1,6 @@
-use crate::{components::*, invoke, views::View};
+use crate::{api, components::*, invoke, views::View};
 use serde::{Deserialize, Serialize};
 use shared::models;
-use wasm_bindgen::JsValue;
 use web_sys::MouseEvent;
 use yew::{html, Component, Html, Properties};
 
@@ -11,74 +10,50 @@ pub struct EntryView {
     collections_menu_open: bool,
 }
 
-pub enum Message {
+pub enum Msg {
     Update(models::Entry),
     UpdateCollections(Vec<models::Collection>),
     ToggleCollectionsMenu,
     AddToCollection { collection_id: u32 },
     None,
+    Initialize { id: u32 },
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GetTerm {
+    pub id: u32,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PushHistory {
+    pub term_id: u32,
 }
 
 impl Component for EntryView {
-    type Message = Message;
+    type Message = Msg;
     type Properties = EntryProps;
 
     fn create(ctx: &yew::Context<Self>) -> Self {
-        #[derive(Serialize, Deserialize)]
-        #[serde(rename_all = "camelCase")]
-        pub struct GetTerm {
-            pub id: u32,
-        }
-        #[derive(Serialize, Deserialize)]
-        #[serde(rename_all = "camelCase")]
-        pub struct PushHistory {
-            pub term_id: u32,
-        }
-
         let id = ctx.props().id;
-        // get word
-        ctx.link().send_future(async move {
-            let result: models::Entry = serde_wasm_bindgen::from_value({
-                invoke(
-                    "get_term",
-                    serde_wasm_bindgen::to_value(&GetTerm { id }).unwrap(),
-                )
-                .await
-            })
-            .unwrap();
-            Message::Update(result)
-        });
-
-        // get collections
-        ctx.link().send_future(async move {
-            let result: Vec<models::Collection> = serde_wasm_bindgen::from_value({
-                invoke("collections_index", JsValue::null()).await
-            })
-            .unwrap();
-            Message::UpdateCollections(result)
-        });
-
-        // Add to search history
-        ctx.link().send_future(async move {
-            invoke(
-                "history_create",
-                serde_wasm_bindgen::to_value(&PushHistory { term_id: id }).unwrap(),
-            )
-            .await;
-            Message::None
-        });
-
+        ctx.link().send_message(Msg::Initialize { id });
         Self {
             entry: None,
-            collections: Default::default(),
+            collections: vec![],
             collections_menu_open: false,
         }
+    }
+
+    fn changed(&mut self, ctx: &yew::Context<Self>, _old_props: &Self::Properties) -> bool {
+        let id = ctx.props().id;
+        ctx.link().send_message(Msg::Initialize { id });
+        true
     }
 
     fn view(&self, ctx: &yew::Context<Self>) -> yew::Html {
         let link = ctx.link().clone();
         let onclick = move |e: MouseEvent| {
-            link.send_message(Message::ToggleCollectionsMenu);
+            link.send_message(Msg::ToggleCollectionsMenu);
             let _target = e.target().unwrap();
         };
         let link = ctx.link().clone();
@@ -93,7 +68,7 @@ impl Component for EntryView {
                         <Menu<models::Collection>
                             open={self.collections_menu_open} options={self.collections.clone()}
                             onclick={move |collection: models::Collection| {
-                            link.clone().send_message(Message::AddToCollection { collection_id: collection.id as u32 })
+                            link.clone().send_message(Msg::AddToCollection { collection_id: collection.id as u32 })
                         }} />
                     </div>
                 </Bar>
@@ -103,7 +78,7 @@ impl Component for EntryView {
                             <container>
                                 // <components::Ruby simplified={self.0.clone().map(|x| x.simplified).unwrap_or_default()} pinyin={self.0.clone().map(|x| x.pinyin).unwrap_or_default()} tones={self.0.clone().map(|x| x.tones_u8()).unwrap_or_default()}></components::Ruby>
                                 <Ruby entry={entry.clone()}></Ruby>
-                                <p> { entry.definition } </p>
+                                <Definition definition={entry.definition} />
                             </container>
                         }
                     }).collect::<Html>()
@@ -121,19 +96,51 @@ impl Component for EntryView {
         }
 
         match msg {
-            Message::Update(term) => {
+            Msg::Initialize { id } => {
+                // get word
+                ctx.link().send_future(async move {
+                    let result: models::Entry = serde_wasm_bindgen::from_value({
+                        invoke(
+                            "get_term",
+                            serde_wasm_bindgen::to_value(&GetTerm { id }).unwrap(),
+                        )
+                        .await
+                    })
+                    .unwrap();
+                    Msg::Update(result)
+                });
+
+                // get collections
+                ctx.link().send_future(async move {
+                    let result: Vec<models::Collection> = api::collections::index().await.unwrap();
+                    Msg::UpdateCollections(result)
+                });
+
+                // Add to search history
+                ctx.link().send_future(async move {
+                    invoke(
+                        "history_create",
+                        serde_wasm_bindgen::to_value(&PushHistory { term_id: id }).unwrap(),
+                    )
+                    .await;
+                    Msg::None
+                });
+
+                true
+            }
+            Msg::Update(term) => {
                 self.entry = Some(term);
                 true
             }
-            Message::UpdateCollections(collections) => {
+            Msg::UpdateCollections(collections) => {
                 self.collections = collections;
                 true
             }
-            Message::ToggleCollectionsMenu => {
+            Msg::ToggleCollectionsMenu => {
                 self.collections_menu_open = !self.collections_menu_open;
                 true
             }
-            Message::AddToCollection { collection_id } => {
+            Msg::AddToCollection { collection_id } => {
                 let entry_id = self.entry.clone().unwrap().id as u32;
                 ctx.link().send_future(async move {
                     invoke(
@@ -146,11 +153,11 @@ impl Component for EntryView {
                     )
                     .await;
 
-                    Message::None
+                    Msg::None
                 });
                 true
             }
-            Message::None => false,
+            Msg::None => true,
         }
     }
 }
