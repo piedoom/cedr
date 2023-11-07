@@ -3,16 +3,11 @@ use wasm_bindgen::JsValue;
 
 use crate::invoke;
 
-#[derive(serde::Serialize)]
-struct GetArgs {
-    entry_id: u32,
-}
-
 pub async fn get(entry_id: u32) -> Result<models::Score, serde_wasm_bindgen::Error> {
     serde_wasm_bindgen::from_value(
         invoke(
             "scores_get",
-            serde_wasm_bindgen::to_value(&GetArgs { entry_id })?,
+            to_value(&HashMap::from([("entry_id", entry_id)]))?,
         )
         .await,
     )
@@ -22,7 +17,7 @@ pub async fn get_or_create(entry_id: u32) -> Result<models::Score, serde_wasm_bi
     serde_wasm_bindgen::from_value(
         invoke(
             "scores_get_or_create",
-            serde_wasm_bindgen::to_value(&GetArgs { entry_id })?,
+            to_value(&HashMap::from([("entry_id", entry_id)]))?,
         )
         .await,
     )

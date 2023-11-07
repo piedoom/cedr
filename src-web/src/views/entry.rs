@@ -1,4 +1,4 @@
-use crate::{api, components::*, invoke, views::View};
+use crate::{api, components::*, invoke};
 use serde::{Deserialize, Serialize};
 use shared::models;
 use web_sys::MouseEvent;
@@ -17,6 +17,11 @@ pub enum Msg {
     AddToCollection { collection_id: u32 },
     None,
     Initialize { id: u32 },
+}
+
+#[derive(Properties, PartialEq)]
+pub struct EntryProps {
+    pub id: u32,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -51,38 +56,42 @@ impl Component for EntryView {
     }
 
     fn view(&self, ctx: &yew::Context<Self>) -> yew::Html {
-        let link = ctx.link().clone();
-        let onclick = move |e: MouseEvent| {
-            link.send_message(Msg::ToggleCollectionsMenu);
-            let _target = e.target().unwrap();
-        };
-        let link = ctx.link().clone();
-
         html!(
             <>
-                <Bar back_button={true} title={self.title()} >
-                    <div>
-                        <button onclick={onclick}>
-                            {"Collect"}
-                        </button>
-                        <Menu<models::Collection>
-                            open={self.collections_menu_open} options={self.collections.clone()}
-                            onclick={move |collection: models::Collection| {
-                            link.clone().send_message(Msg::AddToCollection { collection_id: collection.id as u32 })
-                        }} />
-                    </div>
-                </Bar>
-                {
-                    self.entry.iter().cloned().map(|entry| {
-                        html! {
-                            <container>
-                                // <components::Ruby simplified={self.0.clone().map(|x| x.simplified).unwrap_or_default()} pinyin={self.0.clone().map(|x| x.pinyin).unwrap_or_default()} tones={self.0.clone().map(|x| x.tones_u8()).unwrap_or_default()}></components::Ruby>
-                                <Ruby entry={entry.clone()}></Ruby>
-                                <Definition definition={entry.definition} />
-                            </container>
-                        }
-                    }).collect::<Html>()
-                }
+            {
+                self.entry.iter().cloned().map(|entry| {
+                    let link = ctx.link().clone();
+                    let onclick = move |e: MouseEvent| {
+                        link.send_message(Msg::ToggleCollectionsMenu);
+                        let _target = e.target().unwrap();
+                    };
+                    let link = ctx.link().clone();
+                    html! {
+                        <container>
+                            <actions>
+                                <start>
+                                    // // Don't show pronunciation yet as file bloat is maybe not worth cost
+                                    // if let Some(entry) = self.entry.clone() {
+                                    //     <Pronunciation pinyin_numbers={entry.pinyin_numbers} />
+                                    // }
+                                </start>
+                                <end>
+                                    <button onclick={onclick}>
+                                        {"Collect"}
+                                    </button>
+                                </end>
+                                <Menu<models::Collection>
+                                    open={self.collections_menu_open} options={self.collections.clone()}
+                                    onclick={move |collection: models::Collection| {
+                                    link.clone().send_message(Msg::AddToCollection { collection_id: collection.id as u32 })
+                                }} />
+                            </actions>
+                            <Ruby entry={entry.clone()} clickable={true}></Ruby>
+                            <Definition definition={entry.definition} />
+                        </container>
+                    }
+                }).collect::<Html>()
+            }
             </>
         )
     }
@@ -166,11 +175,6 @@ impl crate::views::View for EntryView {
     fn title(&self) -> Option<String> {
         self.entry.clone().map(|t| t.simplified)
     }
-}
-
-#[derive(Properties, PartialEq)]
-pub struct EntryProps {
-    pub id: u32,
 }
 
 #[derive(Serialize, Deserialize)]

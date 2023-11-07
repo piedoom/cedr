@@ -6,15 +6,13 @@ mod cedict;
 mod commands;
 
 use etcetera::{choose_app_strategy, AppStrategy, AppStrategyArgs};
+use log::LevelFilter;
 use sqlx::migrate::MigrateDatabase;
 use sqlx::sqlite::SqlitePoolOptions;
 use std::{env, str::FromStr};
 use strum_macros::{Display, EnumString};
-use tauri::{
-    async_runtime::block_on,
-    menu::{MenuBuilder, MenuId, MenuItem, SubmenuBuilder},
-};
-use tauri_plugin_dialog::DialogExt;
+use tauri::menu::MenuId;
+use tauri_plugin_log::{Target, TargetKind};
 
 #[derive(Debug, EnumString, Display, Default)]
 enum MenuAction {
@@ -56,86 +54,13 @@ async fn main() {
         .await
         .unwrap();
 
-    sqlx::migrate!("../migrations/").run(&pool).await.unwrap();
+    if let Err(e) = sqlx::migrate!("../migrations/").run(&pool).await {
+        println!("{e}");
+    }
 
     let manage_pool = pool.clone();
 
     tauri::Builder::default()
-        .menu(|app| {
-            MenuBuilder::new(app)
-                .items(&[
-                    &SubmenuBuilder::new(app, "File")
-                        .items(&[
-                            &MenuItem::with_id(
-                                app,
-                                &MenuAction::ImportCollections,
-                                "Import collections",
-                                true,
-                                None,
-                            ),
-                            &MenuItem::with_id(
-                                app,
-                                &MenuAction::ExportCollections,
-                                "Export collections",
-                                true,
-                                None,
-                            ),
-                        ])
-                        .build()?,
-                    &SubmenuBuilder::new(app, "Settings")
-                        .items(&[
-                            // &MenuItem::new(app, "Settings", true, None),
-                            &MenuItem::with_id(
-                                app,
-                                &MenuAction::UpdateDictionary,
-                                "Update dictionary",
-                                true,
-                                None,
-                            ),
-                        ])
-                        .build()?,
-                ])
-                // .item(
-                //     &SubmenuBuilder::new(app, "Edit")
-                //         .items(&[
-                //             &MenuItem::new(app, "Edit collections", true, None),
-                //             &MenuItem::new(app, "Update dictionary", true, None),
-                //         ])
-                //         .build()?,
-                // )
-                .build()
-        })
-        .setup(move |app| {
-            let pool = pool.clone();
-            app.on_menu_event(move |app, event| {
-                let pool = pool.clone();
-                match MenuAction::from(event.id) {
-                    MenuAction::ImportCollections => {
-                        app.dialog().file().pick_file(|path| {
-                            let path = path.unwrap();
-                            block_on(async move {
-                                api::collections::import(&pool, path.path).await.unwrap()
-                            });
-                        });
-                    }
-                    MenuAction::ExportCollections => {
-                        app.dialog().file().save_file(|path| {
-                            let path = path.unwrap();
-                            block_on(async move {
-                                api::collections::export(&pool, path).await.unwrap()
-                            });
-                        });
-                    }
-                    MenuAction::UpdateDictionary => {
-                        tokio::spawn(async move {
-                            cedict::build_dictionary(&pool).await.unwrap();
-                        });
-                    }
-                    MenuAction::None => (),
-                }
-            });
-            Ok(())
-        })
         .manage(manage_pool.clone())
         .invoke_handler(tauri::generate_handler![
             commands::query,
@@ -151,9 +76,24 @@ async fn main() {
             commands::scores_get_or_create,
             commands::scores_get,
             commands::scores_update,
-            // TODO: Get term
+            commands::update_cedict,
+            commands::import_collections,
+            commands::export_collections,
+            commands::get_preferences,
+            commands::set_preferences,
         ])
         .plugin(tauri_plugin_dialog::init())
+        .plugin(
+            tauri_plugin_log::Builder::default()
+                .targets([
+                    Target::new(TargetKind::LogDir {
+                        file_name: Some(data_path.join("log").to_string_lossy().to_string()),
+                    }),
+                    Target::new(TargetKind::Stdout),
+                ])
+                .level(LevelFilter::Info)
+                .build(),
+        )
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -1,6 +1,9 @@
 # cedr
 
-![Alt text](docs/media/image.png)
+|Light|Dark|
+|---|---|
+| ![Alt text](docs/media/image-light.png) | ![Alt text](docs/media/image-dark.png) |
+
 
 Chinese English dictionary in Rust. Uses CC-CEDICT. [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/)
 
@@ -12,7 +15,9 @@ This is mostly a project for my own benefit at the moment, so the roadmap is bas
     - [x] Simplified characters
     - [x] Traditional characters
     - [x] Pinyin
-- [x] Dictionary downloads and updates
+    - [ ] Pinyin audio
+- [x] Dictionary
+    - [x] 1-click updates
     - [ ] Multiple dictionary sources
 - [x] Search
     - [x] Automatic detection
@@ -31,11 +36,15 @@ This is mostly a project for my own benefit at the moment, so the roadmap is bas
     - [ ] Default HSK decks
     - [ ] Learn by character dependency (Automatically learn all individual characters of a compound word first)
     - [ ] Import/Export progress
-- [ ] Theming
-    - [ ] Dark theme
+- [x] Theming
+    - [x] Light theme
+    - [x] Dark theme
+    - [ ] Automatic theme switching
+- [x] Logging
+    - [ ] Detailed logs
 - [ ] Multiple device data sync
-- [ ] CI task to generate installer
-    - [ ] Windows
+- [x] CI task to generate installer
+    - [x] Windows
     - [ ] Mac
     - [ ] Linux
 - [ ] Mobile app (iOS)

@@ -9,8 +9,11 @@ use crate::{api, Route};
 pub struct Ruby;
 
 #[derive(Properties, PartialEq)]
-pub struct RubyProps {
+pub struct Props {
     pub entry: models::Entry,
+    /// Whether or not the individual characters link to the single char
+    #[prop_or_default]
+    pub clickable: bool,
 }
 
 pub enum Msg {
@@ -20,7 +23,7 @@ pub enum Msg {
 
 impl Component for Ruby {
     type Message = Msg;
-    type Properties = RubyProps;
+    type Properties = Props;
 
     fn create(_ctx: &Context<Self>) -> Self {
         Self
@@ -29,6 +32,7 @@ impl Component for Ruby {
     fn view(&self, ctx: &Context<Self>) -> Html {
         let entry = ctx.props().entry.clone();
         let chars = entry.pinyin.split(' ').count();
+        let clickable = ctx.props().clickable;
         html! {
             <horizontal class="end sm">
                 <rb style={format!("grid-template-columns: repeat({chars}, 1fr);")}>
@@ -43,10 +47,15 @@ impl Component for Ruby {
                             .zip(entry.tones_u8())
                             .map(|((ch, traditional), tone)| {
                                 let link = ctx.link().clone();
+                                let class = format!("tone{tone}");
+                                let onclick = move |_| link.send_message(Msg::Navigate { traditional });
                                 {
                                     html! {
-                                        <hanzi class={format!("tone{tone}")} onclick={move |_| link.send_message(Msg::Navigate { traditional })} >{ch}</hanzi>
-                                    // onmouseleave={hide_char} onmouseover={show_char}
+                                        if clickable {
+                                            <hanzi {class} {onclick}>{ch}</hanzi>
+                                        } else {
+                                            <hanzi {class} >{ch}</hanzi>
+                                        }
                                     }
                                 }
                             }).collect::<Html>()
@@ -55,17 +64,12 @@ impl Component for Ruby {
                         {
                             entry.traditional.chars()
                                 .zip(entry.simplified.chars())
-                                .zip(entry.tones_u8())
-                                .map(|((traditional, simplified), tone)| {
-                                    let link = ctx.link().clone();
-                                    {
-                                        html! {
-                                            if traditional != simplified {
-                                                <traditional onclick={move |_| link.send_message(Msg::Navigate { traditional })} >{traditional}</traditional>
-                                            } else {
-                                                <div></div>
-                                            }
-                                        // onmouseleave={hide_char} onmouseover={show_char}
+                                .map(|(traditional, simplified)| {
+                                    html! {
+                                        if traditional != simplified {
+                                            <traditional>{traditional}</traditional>
+                                        } else {
+                                            <div></div>
                                         }
                                     }
                                 }).collect::<Html>()

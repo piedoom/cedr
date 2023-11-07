@@ -1,7 +1,7 @@
 use shared::models;
 use yew::prelude::*;
 
-use crate::{api, components::*, views::View, Route};
+use crate::{api, components::*, util::Size};
 
 pub struct Show(pub Option<models::CollectionWithEntries>);
 
@@ -30,22 +30,25 @@ impl Component for Show {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
-        <>
             if self.0.is_some() {
-            <Bar back_button={true} title={self.title()}/>
-            <List<models::Entry>
-                items={self.0.clone().unwrap().entries}
-                render={|entry: models::Entry| {
-                    html! {
-                        <Link to={Route::Entry { id: entry.id as u32 }}>
-                            <Ruby entry={entry.clone()} />
-                            <Definition definition={entry.definition} />
-                        </Link>
+                <Split<models::Entry>
+                    items={self.0.clone().unwrap().entries}
+                    width={Size::Em(16f32)}
+                    render_list={|entry: models::Entry|
+                        html! {
+                            <>
+                                <Ruby entry={entry.clone()} />
+                                <Definition definition={entry.definition} limit={1} />
+                            </>
+                        }
                     }
-                }}>
-            </List<models::Entry>>
+                    render_split={|collection: models::Entry|
+                        html! {
+                            <crate::views::EntryView id={collection.id as u32} />
+                        }
+                    }
+                />
             }
-        </>
         }
     }
 

@@ -20,6 +20,8 @@ where
     pub render: Callback<T, Html>,
     #[prop_or_default]
     pub route: Option<Callback<T, crate::Route>>,
+    #[prop_or_default]
+    pub onclick: Option<Callback<(MouseEvent, T), ()>>,
 }
 
 impl<T> Component for List<T>
@@ -37,19 +39,17 @@ where
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let ListProps {
-            items,
-            render,
-            route,
-        } = ctx.props();
+        let items = ctx.props().items.clone();
+        let render = ctx.props().render.clone();
+        let route = ctx.props().route.clone();
+        let onclick = ctx.props().onclick.clone();
 
         html! {
             <list>
                 { items
-                    .iter()
+                    .into_iter()
                     .map(|item| {
                         let list_item = render.emit(item.clone());
-
                         match route.clone() {
                             Some(route) => {
                                 html! {
@@ -60,7 +60,24 @@ where
                                     </Link>
                                 }
                             }
-                            None => html! { <listitem> {list_item} </listitem> }
+                            None => {
+                                let onclick = onclick.clone();
+                                // Only show as clickable if set
+                                let styles = if onclick.is_some() {
+                                    "cursor: pointer;"
+                                } else { "" };
+                                let item_onclick = move |ev: MouseEvent, item: T| {
+                                    if let Some(onclick) = onclick.clone() {
+                                        onclick.emit((ev, item));
+                                    }
+                                };
+
+                                html! {
+                                    <listitem style={styles} onclick={move |ev| { item_onclick(ev, item.clone()); } }>
+                                        {list_item}
+                                    </listitem>
+                                }
+                            }
                         }
                     })
                     .collect::<Vec<_>>()

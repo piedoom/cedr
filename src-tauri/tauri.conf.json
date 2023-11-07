@@ -36,7 +36,7 @@
         "fullscreen": false,
         "height": 700,
         "resizable": true,
-        "theme": "Light",
+        "theme": "Dark",
         "title": "cedr",
         "width": 700
       }

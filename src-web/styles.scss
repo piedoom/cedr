@@ -4,15 +4,63 @@
 @import "font.scss";
 @import "./public/line-awesome/css/line-awesome.min.css";
 
-$accent: rgb(104, 58, 240);
-$tint: desaturate(darken($accent, 20), 50);
+$base-accent-10: #e9e9ff;
+$base-accent-20: #a0a0fd;
+$base-accent-30: #6d6dff;
+$base-accent-40: #5d5dff;
+$base-accent-50: #4949fb;
+$base-accent-60: #2121fa;
+$base-accent-70: #1c1cd5;
+$base-accent-80: #1717b2;
+$base-accent-90: #13138f;
+$base-accent-100: #0f0f70;
 
-$base-grayscale-0: white;
-$base-grayscale-5: rgba($tint, 0.03);
-$base-grayscale-10: rgba($tint, 0.07);
-$base-grayscale-30: #adadad;
-$base-grayscale-40: #6e6e6e;
-$base-grayscale-50: #000;
+// $tint: desaturate(darken($base-accent-50, 20), 50);
+
+// $base-grayscale-0: white;
+// $base-grayscale-5: rgba($tint, 0.03);
+// $base-grayscale-10: rgba($tint, 0.07);
+// $base-grayscale-30: #adadad;
+// $base-grayscale-40: #6e6e6e;
+// $base-grayscale-60: #3a3a3a;
+// $base-grayscale-90: #151515;
+// $base-grayscale-100: #101010;
+
+$base-grayscale-0: #ffffff;
+$base-grayscale-10: #f6f6f6;
+$base-grayscale-20: #f2f2f2;
+$base-grayscale-30: #bfbfbf;
+$base-grayscale-40: #8c8c8c;
+$base-grayscale-50: #595959;
+$base-grayscale-60: #454545;
+$base-grayscale-70: #262626;
+$base-grayscale-80: #1f1f1f;
+$base-grayscale-90: #141414;
+$base-grayscale-100: #000000;
+
+$base-transparent-black-0: rgba(0, 0, 0, 0);
+$base-transparent-black-10: rgba(0, 0, 0, 0.1);
+$base-transparent-black-20: rgba(0, 0, 0, 0.2);
+$base-transparent-black-30: rgba(1, 0, 0, 0.3);
+$base-transparent-black-40: rgba(0, 0, 0, 0.4);
+$base-transparent-black-50: rgba(0, 0, 0, 0.5);
+$base-transparent-black-60: rgba(0, 0, 0, 0.6);
+$base-transparent-black-70: rgba(0, 0, 0, 0.7);
+$base-transparent-black-80: rgba(0, 0, 0, 0.8);
+$base-transparent-black-90: rgba(0, 0, 0, 0.9);
+$base-transparent-black-100: rgba(0, 0, 0, 1);
+
+$base-transparent-white-0: rgba(255, 255, 255, 0);
+$base-transparent-white-10: rgba(255, 255, 255, 0.1);
+$base-transparent-white-20: rgba(255, 255, 255, 0.2);
+$base-transparent-white-30: rgba(255, 255, 255, 0.3);
+$base-transparent-white-40: rgba(255, 255, 255, 0.4);
+$base-transparent-white-50: rgba(255, 255, 255, 0.5);
+$base-transparent-white-60: rgba(255, 255, 255, 0.6);
+$base-transparent-white-70: rgba(255, 255, 255, 0.7);
+$base-transparent-white-80: rgba(255, 255, 255, 0.8);
+$base-transparent-white-90: rgba(255, 255, 255, 0.9);
+$base-transparent-white-100: rgba(255, 255, 255, 1);
 
 $base-red-50: #cc2400;
 $base-green-50: #4e9d01;
@@ -24,7 +72,7 @@ $base-purple-50: #b700c7;
 $space-xs: 0.25em;
 $space-sm: 0.5em;
 $space-md: 1em;
-$radius: 2px;
+$radius: 4px;
 $border-width: 1px;
 
 $speed: 100ms;
@@ -32,30 +80,100 @@ $ease: ease-in-out;
 
 /* ------------------------------ */
 
-$color-background-contrast: $base-grayscale-0;
-$color-background-secondary: $base-grayscale-5;
-
-$color-background-input: $base-grayscale-5;
-
-$color-background-hover: $base-grayscale-5;
-$color-background-active: $base-grayscale-10;
-
-$color-border: $base-grayscale-10;
-$color-outline: $base-grayscale-10;
-
-$color-text-primary: $base-grayscale-50;
-$color-text-secondary: $base-grayscale-30;
-$color-text-contrast: $base-grayscale-0;
-
-$color-tone-1: $base-red-50;
-$color-tone-2: $base-green-50;
-$color-tone-3: $base-blue-50;
-$color-tone-4: $base-purple-50;
-$color-tone-5: $base-grayscale-40;
-
 $font-weight-regular: 400;
 $font-weight-medium: 500;
 $font-weight-bold: 700;
+
+$font-size-heading: 2em;
+$font-size-subheading: 1.5em;
+
+/* ------------------------------ */
+
+$themes: (
+  light: (
+    "background-contrast": $base-grayscale-0,
+    "background-secondary": $base-grayscale-10,
+    "background-hover": $base-grayscale-10,
+    "background-secondary-hover": $base-grayscale-20,
+    "background-active": $base-grayscale-20,
+    "background-secondary-active": $base-grayscale-30,
+
+    "transparent-0": $base-transparent-black-0,
+    "transparent-10": $base-transparent-black-10,
+    "transparent-20": $base-transparent-black-20,
+    "transparent-30": $base-transparent-black-30,
+    "transparent-40": $base-transparent-black-40,
+    "transparent-50": $base-transparent-black-50,
+    "transparent-60": $base-transparent-black-60,
+    "transparent-70": $base-transparent-black-70,
+    "transparent-80": $base-transparent-black-80,
+    "transparent-90": $base-transparent-black-90,
+    "transparent-100": $base-transparent-black-100,
+
+    "border": $base-grayscale-20,
+    "outline": $base-grayscale-30,
+
+    "text-primary": $base-grayscale-100,
+    "text-accent": $base-accent-50,
+    "text-secondary": $base-grayscale-30,
+    "text-contrast": $base-grayscale-10,
+
+    "tone-1": $base-red-50,
+    "tone-2": $base-green-50,
+    "tone-3": $base-blue-50,
+    "tone-4": $base-purple-50,
+    "tone-5": $base-grayscale-40,
+
+    "accent": $base-accent-50,
+    "accent-hover": $base-accent-40
+  ),
+  dark: (
+    "background-contrast": $base-grayscale-90,
+    "background-hover": $base-grayscale-80,
+    "background-active": $base-grayscale-70,
+
+    "background-secondary": $base-transparent-white-10,
+    "background-secondary-hover": $base-transparent-white-20,
+    "background-secondary-active": $base-transparent-white-30,
+
+    "transparent-0": $base-transparent-white-0,
+    "transparent-10": $base-transparent-white-10,
+    "transparent-20": $base-transparent-white-20,
+    "transparent-30": $base-transparent-white-30,
+    "transparent-40": $base-transparent-white-40,
+    "transparent-50": $base-transparent-white-50,
+    "transparent-60": $base-transparent-white-60,
+    "transparent-70": $base-transparent-white-70,
+    "transparent-80": $base-transparent-white-80,
+    "transparent-90": $base-transparent-white-90,
+    "transparent-100": $base-transparent-white-100,
+
+    "border": $base-grayscale-70,
+    "outline": $base-grayscale-10,
+
+    "text-primary": $base-grayscale-10,
+    "text-accent": $base-accent-20,
+    "text-secondary": $base-grayscale-40,
+    "text-contrast": $base-grayscale-100,
+
+    "tone-1": #fa887a,
+    "tone-2": #a5ef88,
+    "tone-3": #51dde8,
+    "tone-4": #dab0ea,
+    "tone-5": $base-grayscale-40,
+
+    "accent": $base-accent-40,
+    "accent-hover": $base-accent-30
+  )
+);
+
+@each $name, $map in $themes {
+  .#{$name} {
+    @each $key, $value in $map {
+      --#{$key}: #{$value};
+    }
+  }
+}
 
 /* ------------------------------ */
 
@@ -63,19 +181,47 @@ $font-weight-bold: 700;
   box-sizing: border-box;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 1em;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: var(--background-secondary);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--transparent-20);
+}
+
 body {
   font-family: "Pretendard Variable", sans-serif;
   font-size: 14px;
-  background-color: $color-background-contrast;
-  color: $color-text-primary;
+  background-color: var(--background-contrast);
+  color: var(--text-primary);
   user-select: text;
   cursor: default;
+  overflow: hidden;
+}
+
+div {
+  display: flex;
+}
+
+h2 {
+  font-size: $font-size-subheading;
+}
+
+i {
+  pointer-events: none;
 }
 
 input {
   font-size: 1em;
-  background: $color-background-input;
-  color: $color-text-primary;
+  background: var(--background-secondary);
+  color: var(--text-primary);
   border: none;
   border-radius: $radius;
   &[type="text"] {
@@ -85,13 +231,11 @@ input {
 
 topbar {
   flex-direction: row;
-  min-height: 3em;
   align-items: center;
   // backdrop-filter: blur(15px);
   // background-color: #ffffff82;
   font-weight: $font-weight-medium;
   gap: $space-sm;
-  border-bottom: $border-width solid $color-border;
   display: flex;
   padding: 0 $space-md;
   box-sizing: border-box;
@@ -104,7 +248,7 @@ select {
   transition: all 200ms $ease;
   outline-style: solid;
   &:focus {
-    outline-color: $color-outline;
+    outline-color: var(--outline);
   }
 }
 
@@ -113,7 +257,7 @@ search {
   display: flex;
   flex-direction: row;
   flex: 1;
-  background-color: $color-background-active;
+  background-color: var(--background-secondary);
   margin: $space-md 0;
   input[type="text"] {
     background-color: transparent;
@@ -122,6 +266,7 @@ search {
     border-bottom-right-radius: 0;
   }
   select {
+    color: var(--text-primary);
     background-color: transparent;
     border: none;
     border-radius: 0 $radius $radius 0;
@@ -131,8 +276,9 @@ search {
 }
 
 button {
+  display: flex;
   font-weight: $font-weight-medium;
-  color: $color-text-contrast;
+  color: var(--text-contrast);
   gap: $space-xs;
   border-radius: $radius;
   padding: $space-sm $space-md;
@@ -140,19 +286,27 @@ button {
   font-size: 1em;
   border: none;
   cursor: pointer;
-  color: $color-text-contrast;
-  transition: all 200ms $ease;
-  background-color: $accent;
+  color: var(--text-contrast);
+  background-color: var(--accent);
+  width: fit-content;
   // &:hover {
-  //   background-color: $accent;
+  //   background-color: var(--accent);
   // }
+  &:hover {
+    background-color: var(--accent-hover);
+  }
+}
+
+// dark theme button text color exception
+.dark button {
+  color: var(--text-primary);
 }
 
 button[variant="secondary"] {
-  color: $color-text-primary;
-  background-color: transparent;
+  color: var(--text-primary);
+  background-color: var(--background-secondary);
   &:hover {
-    background-color: $color-background-hover;
+    background-color: var(--background-secondary-hover);
   }
 }
 
@@ -163,7 +317,7 @@ a {
 
 hr {
   border: none;
-  border-bottom: $border-width solid $color-border;
+  border-bottom: $border-width solid var(--border);
   padding: 0;
   margin: 0;
 }
@@ -181,6 +335,8 @@ horizontal {
 
 vertical,
 horizontal {
+  min-height: 0;
+
   &.start {
     align-items: start;
   }
@@ -207,71 +363,69 @@ rb {
   width: fit-content;
   display: grid;
   justify-items: center;
-}
-
-hanzi,
-pinyin {
-  display: flex;
-  width: 1.5rem;
-}
-
-hanzi,
-traditional {
-  font-size: 1.5em;
-  justify-content: center;
-  border-radius: $radius;
-  cursor: pointer;
-  &:hover {
-    background-color: $color-background-hover;
+  hanzi,
+  pinyin {
+    display: flex;
+    width: 1.5rem;
   }
-}
 
-traditional {
-  font-size: 1em;
-  color: $color-text-secondary;
-}
+  hanzi,
+  traditional {
+    font-size: 1.5em;
+    justify-content: center;
+    border-radius: $radius;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--background-hover);
+    }
+  }
 
-pinyin {
-  font-size: 0.7em;
-  width: fit-content;
-  text-align: center;
+  traditional {
+    font-size: 1em;
+    color: var(--text-secondary);
+  }
+
+  pinyin {
+    font-size: 0.7em;
+    width: fit-content;
+    text-align: center;
+  }
 }
 
 box {
   padding: $space-xs $space-sm;
-  // background-color: $color-background-secondary;
+  // background-color: var(--background-secondary);
   border-radius: $radius;
-  border: $border-width $color-border solid;
+  border: $border-width var(--border) solid;
 }
 
 .tone1 {
-  color: $color-tone-1;
+  color: var(--tone-1);
 }
 .tone2 {
-  color: $color-tone-2;
+  color: var(--tone-2);
 }
 .tone3 {
-  color: $color-tone-3;
+  color: var(--tone-3);
 }
 .tone4 {
-  color: $color-tone-4;
+  color: var(--tone-4);
 }
 .tone5 {
-  color: $color-tone-5;
+  color: var(--tone-5);
 }
 
 nav {
   display: flex;
-  width: fit-content;
-  border-right: $border-width solid $color-border;
-  height: 100vh;
+  width: 100%;
+  border-right: $border-width solid var(--border);
 }
 
 content {
   display: flex;
+  min-height: 0; // weird css thing
   flex-direction: column;
   flex: 1;
-  height: 100vh;
 }
 
 ruby {
@@ -282,20 +436,25 @@ ruby {
 list,
 container {
   flex: 1;
-  height: auto;
-  overflow-y: scroll;
   display: flex;
   flex-direction: column;
 }
 
-list listitem {
-  display: flex;
-  flex-direction: column;
-  padding: $space-md;
-  border-bottom: $color-border $border-width solid;
-  transition: background-color $speed $ease;
-  &:hover {
-    background-color: $color-background-hover;
+container {
+  gap: $space-md;
+}
+
+list {
+  overflow-y: scroll;
+  listitem {
+    display: flex;
+    flex-direction: column;
+    padding: $space-md;
+    border-bottom: var(--border) $border-width solid;
+    //transition: background-color $speed $ease;
+    &:hover {
+      background-color: var(--background-hover);
+    }
   }
 }
 
@@ -307,6 +466,8 @@ tabs {
   width: 100%;
   display: flex;
   flex-direction: column;
+  border-bottom: $border-width var(--border) solid;
+  user-select: none;
 }
 
 tab {
@@ -318,12 +479,14 @@ tab {
   flex: 1;
   align-items: center;
   font-weight: $font-weight-medium;
+  border-bottom: $border-width var(--border) solid;
   &:hover {
-    background-color: $color-background-hover;
+    background-color: var(--background-hover);
   }
   &.active {
-    background-color: $color-background-active;
-    color: $accent;
+    background-color: var(--background-active);
+    color: var(--text-accent);
+    border-bottom: $border-width var(--accent) solid;
   }
 }
 menucontainer {
@@ -333,17 +496,35 @@ menu {
   display: flex;
   flex-direction: column;
   position: absolute;
-  background-color: $color-background-contrast;
-  box-shadow: $color-background-active 0 0 $space-md;
+  background-color: var(--background-contrast);
+  box-shadow: var(--background-active) 0 0 $space-md;
   width: 14em;
   left: -14em;
 }
 
 menuitem {
   &:hover {
-    background-color: $color-background-hover;
+    background-color: var(--background-hover);
   }
   transition: background-color $ease $speed;
   padding: $space-sm $space-md;
   cursor: pointer;
+}
+
+actions {
+  display: flex;
+  gap: $space-sm;
+  width: 100%;
+  end {
+    display: flex;
+    width: fit-content;
+    justify-self: end;
+    gap: inherit;
+  }
+  start {
+    display: flex;
+    flex: 1;
+    justify-self: start;
+    gap: inherit;
+  }
 }

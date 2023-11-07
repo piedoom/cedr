@@ -1,7 +1,7 @@
 use shared::models;
 use yew::prelude::*;
 
-use crate::{api, components::*, Route, View};
+use crate::{api, components::*, util::Size, View};
 
 pub struct Index {
     pub collections: Vec<models::Collection>,
@@ -35,20 +35,20 @@ impl Component for Index {
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
         <>
-            <Bar title={self.title()}>
-                <Link to={Route::CollectionNew}><button>{"New"}</button></Link>
-            </Bar>
-            <List<models::Collection>
+            <Split<models::Collection>
                 items={self.collections.clone()}
-                route={|collection: models::Collection| Route::Collection { id: collection.id as u32 }}
-                render={|collection: models::Collection|
-                //
-                {
+                width={Size::Em(16f32)}
+                render_list={|collection: models::Collection|
                     html! {
-                        <h3>{collection.name}</h3>
+                       <h3>{collection.name}</h3>
                     }
                 }
-            } />
+                render_split={|collection: models::Collection|
+                    html! {
+                        <super::Show id={collection.id as u32} />
+                    }
+                }
+            />
         </>
         }
     }

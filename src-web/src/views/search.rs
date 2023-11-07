@@ -1,6 +1,6 @@
 use crate::commands::{self};
+use crate::components::*;
 use crate::views::{self};
-use crate::{components::*, Route};
 use shared::models;
 use shared::InputMethod;
 use web_sys::{HtmlInputElement, HtmlOptionElement};
@@ -67,20 +67,23 @@ impl Component for SearchView {
                     match &self.results {
                         Some(results) => {
                             html! {
-                                <List::<models::Entry>
+                                <Split<models::Entry>
                                     items={results.clone()}
-                                    route={|entry: models::Entry| Route::Entry{id: entry.id as u32} }
-                                    render={
-                                    |entry: models::Entry| {
+                                    render_list={|entry: models::Entry|
                                         html! {
                                             <>
-                                                <Ruby entry={entry.clone()}/>
+                                                <Ruby entry={entry.clone()} />
                                                 <Definition definition={entry.definition} />
                                             </>
                                         }
                                     }
-                                }>
-                                </List::<models::Entry>>
+                                    render_split={|entry: models::Entry|
+                                        html! {
+                                            <super::EntryView id={entry.id as u32}>
+                                            </super::EntryView>
+                                        }
+                                    }
+                                />
                             }
                         },
                         // Show the history view as a default

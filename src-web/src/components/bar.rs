@@ -27,7 +27,7 @@ impl Component for Bar {
                             <button variant="secondary" onclick={|_e: MouseEvent| {
                                 web_sys::window().unwrap().history().unwrap().back().ok();
                             }}>
-                                <i class="las la-angle-left"></i>{"Back"}
+                            <i class="las la-angle-left"></i>{"Back"}
                             </button>
                         }
                     }).unwrap_or_default()

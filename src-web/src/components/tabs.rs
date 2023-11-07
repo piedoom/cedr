@@ -89,7 +89,7 @@ where
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <tabs>
-                <vertical>
+                <horizontal>
                     { ctx.props().children.iter().map(|child| {
                         let props = child.props.clone();
                         let link = ctx.link().clone();
@@ -104,7 +104,7 @@ where
                             </div>
                         }
                     }).collect::<Html>() }
-                </vertical>
+                </horizontal>
             </tabs>
         }
     }

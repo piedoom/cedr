@@ -1,9 +1,10 @@
 pub mod api;
 mod components;
+pub mod util;
 mod views;
 
 use crate::{components::*, views::*};
-use hex_color::HexColor;
+use shared::models;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 use yew_router::scope_ext::RouterScopeExt;
@@ -69,64 +70,21 @@ enum Route {
     Settings,
 }
 
-pub struct Settings {
-    pub theme: Theme,
-}
-
-pub struct Theme {
-    pub background: HexColor,
-    pub tones: ToneTheme,
-}
-
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            theme: Theme {
-                background: HexColor::parse("#1B1B1A").unwrap(),
-                tones: ToneTheme::default(),
-            },
-        }
-    }
-}
-
-#[derive(PartialEq, Clone, Copy)]
-pub struct ToneTheme([HexColor; 5]);
-
-impl ToneTheme {
-    pub fn get(&self, tone: &u8) -> &HexColor {
-        let index = (*tone) as usize - 1;
-        self.0
-            .get(index)
-            .unwrap_or_else(|| panic!("No tone found for index {}", index))
-    }
-}
-
-impl Default for ToneTheme {
-    fn default() -> Self {
-        [
-            HexColor::parse("#cc2400").unwrap(),
-            HexColor::parse("#4e9d01").unwrap(),
-            HexColor::parse("#0092e6").unwrap(),
-            HexColor::parse("#b700c7").unwrap(),
-            HexColor::parse("#6e6e6e").unwrap(),
-        ]
-        .into()
-    }
-}
-
-impl From<[HexColor; 5]> for ToneTheme {
-    fn from(value: [HexColor; 5]) -> Self {
-        Self(value)
-    }
-}
-
 pub struct App;
 
+pub enum Msg {
+    SetPreferences(models::Preferences),
+}
+
 impl Component for App {
-    type Message = ();
+    type Message = Msg;
     type Properties = ();
 
-    fn create(_ctx: &Context<Self>) -> Self {
+    fn create(ctx: &Context<Self>) -> Self {
+        ctx.link().send_future(async {
+            let preferences = api::settings::get_preferences().await.unwrap();
+            Msg::SetPreferences(preferences)
+        });
         Self
     }
 
@@ -136,6 +94,22 @@ impl Component for App {
             <yew_router::BrowserRouter>
                 <Root/>
             </yew_router::BrowserRouter>
+        }
+    }
+
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+        match msg {
+            Msg::SetPreferences(preferences) => {
+                let body = web_sys::window()
+                    .unwrap()
+                    .document()
+                    .unwrap()
+                    .body()
+                    .unwrap();
+                body.set_attribute("class", &preferences.theme.to_string())
+                    .unwrap();
+                true
+            }
         }
     }
 }
@@ -168,12 +142,12 @@ impl Component for Root {
     fn view(&self, ctx: &Context<Self>) -> Html {
         let nav = ctx.link().navigator().unwrap();
         html! {
-            <horizontal>
+            <app>
                 <nav>
                     <TabGroup<Route>
                         initial={Route::Search}
                         onselect={move |new_value: Route| {
-                           nav.push(&new_value)
+                        nav.push(&new_value)
                         }}>
                         <Tab<Route>
                             value={Route::Search}
@@ -196,7 +170,7 @@ impl Component for Root {
                 <content>
                     <yew_router::prelude::Switch<Route> render={switch} />
                 </content>
-            </horizontal>
+            </app>
         }
     }
 }

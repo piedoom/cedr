@@ -3,7 +3,7 @@ use wasm_bindgen::JsValue;
 
 use yew::prelude::*;
 
-use crate::{components::*, invoke, views::View, Route};
+use crate::{components::*, invoke};
 
 #[derive(Default)]
 pub struct HistoryView {
@@ -31,25 +31,25 @@ impl yew::Component for HistoryView {
         Self::default()
     }
 
-    fn view(&self, ctx: &yew::Context<Self>) -> yew::Html {
+    fn view(&self, _ctx: &yew::Context<Self>) -> yew::Html {
         html! {
-            <>
-                if !ctx.props().hide_header {
-                    <Bar title={self.title()} ></Bar>
+            <Split<models::Entry>
+                items={self.history.clone()}
+                render_list={|entry: models::Entry|
+                    html! {
+                        <>
+                            <Ruby entry={entry.clone()} />
+                            <Definition definition={entry.definition} limit={3} />
+                        </>
+                    }
                 }
-                <List<models::Entry>
-                    items={self.history.clone()}
-                    route={|entry: models::Entry| Route::Entry {id: entry.id as u32} }
-                    render={|entry: models::Entry| {
-                        html! {
-                            <>
-                                <Ruby entry={entry.clone()} />
-                                <Definition definition={entry.definition} limit={3} />
-                            </>
-                        }
-                    }}>
-                </List<models::Entry>>
-            </>
+                render_split={|entry: models::Entry|
+                    html! {
+                        <super::EntryView id={entry.id as u32}>
+                        </super::EntryView>
+                    }
+                }
+            />
         }
     }
 
@@ -60,12 +60,6 @@ impl yew::Component for HistoryView {
                 true
             }
         }
-    }
-}
-
-impl crate::views::View for HistoryView {
-    fn title(&self) -> Option<String> {
-        Some("History".into())
     }
 }
 

@@ -1,8 +1,12 @@
 use shared::{models, InputMethod, Int};
 use sqlx::{Pool, Sqlite};
 use tauri::State;
+use tauri_plugin_dialog::DialogExt;
 
-use crate::{api::*, cedict};
+use crate::{
+    api::{self, *},
+    cedict,
+};
 
 #[inline(always)]
 fn tauri_err(e: impl ToString) -> String {
@@ -120,4 +124,47 @@ pub(crate) async fn scores_update(
     scores::update(pool.inner(), entry_id, correct)
         .await
         .map_err(tauri_err)
+}
+
+#[tauri::command]
+pub(crate) async fn update_cedict(pool: State<'_, Pool<Sqlite>>) -> Result<(), String> {
+    cedict::build_dictionary(pool.inner())
+        .await
+        .map_err(tauri_err)?;
+    Ok(())
+}
+
+#[tauri::command]
+pub(crate) async fn import_collections(
+    app_handle: tauri::AppHandle,
+    pool: State<'_, Pool<Sqlite>>,
+) -> Result<(), String> {
+    let pool = pool.inner().clone();
+    let file = app_handle.dialog().file().blocking_pick_file().unwrap();
+    api::collections::import(&pool, file.path)
+        .await
+        .map_err(tauri_err)
+}
+
+#[tauri::command]
+pub(crate) async fn export_collections(
+    app_handle: tauri::AppHandle,
+    pool: State<'_, Pool<Sqlite>>,
+) -> Result<(), String> {
+    let pool = pool.inner().clone();
+    let file = app_handle.dialog().file().blocking_pick_file().unwrap();
+    api::collections::export(&pool, file.path)
+        .await
+        .map_err(tauri_err)
+}
+
+#[tauri::command]
+pub(crate) async fn get_preferences() -> Result<models::Preferences, String> {
+    api::preferences::get_or_create().await.map_err(tauri_err)
+}
+
+#[tauri::command]
+pub(crate) async fn set_preferences(theme: models::Theme) -> Result<(), String> {
+    let preferences = models::Preferences { theme };
+    api::preferences::save(preferences).await.map_err(tauri_err)
 }
